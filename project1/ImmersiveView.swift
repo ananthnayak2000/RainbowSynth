@@ -12,20 +12,29 @@ import RealityKitContent
 struct ImmersiveView: View {
     var body: some View {
         RealityView { content in
-            // Add the initial RealityKit content
-            if let immersiveContentEntity = try? await Entity(named: "Immersive", in: realityKitContentBundle) {
-                content.add(immersiveContentEntity)
-
-                // Add an ImageBasedLight for the immersive content
-                guard let resource = try? await EnvironmentResource(named: "ImageBasedLight") else { return }
-                let iblComponent = ImageBasedLightComponent(source: .single(resource), intensityExponent: 0.25)
-                immersiveContentEntity.components.set(iblComponent)
-                immersiveContentEntity.components.set(ImageBasedLightReceiverComponent(imageBasedLight: immersiveContentEntity))
-
-                // Put skybox here.  See example in World project available at
-                // https://developer.apple.com/
-            }
+            let particleModel = ModelEntity()
+            particleModel.components.set(particleSystem())
+            content.add(particleModel)
         }
+    }
+    
+    func particleSystem() -> ParticleEmitterComponent {
+        var particles = ParticleEmitterComponent()
+        particles.timing = .repeating(warmUp: 0, emit:ParticleEmitterComponent.Timing.VariableDuration(duration:1), idle: ParticleEmitterComponent.Timing.VariableDuration(duration: 1))
+        particles.emitterShape = .sphere
+        particles.birthLocation = .volume
+        particles.birthDirection = .normal
+        particles.emitterShapeSize = [10, 10, 10] * 0.05
+        
+        particles.mainEmitter.birthRate = 300
+        //particles.mainEmitter.BurstCount = 100
+        particles.mainEmitter.size = 0.02
+        particles.mainEmitter.lifeSpan = 5
+        particles.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
+        particles.mainEmitter.spreadingAngle = 1
+        
+        return particles
+        
     }
 }
 
