@@ -8,34 +8,45 @@
 def Xform "Root"
 {
     reorder nameChildren = ["Sphere_Left", "Sphere_Right", "GridMaterial"]
-    def Sphere "Sphere_Right" (
-        active = true
-        prepend apiSchemas = ["MaterialBindingAPI"]
-    )
-    {
-        rel material:binding = </Root/GridMaterial/GridMaterial> (
-            bindMaterialAs = "weakerThanDescendants"
-        )
-        double radius = 0.1
-        quatf xformOp:orient = (1, 0, 0, 0)
-        float3 xformOp:scale = (1, 1, 1)
-        float3 xformOp:translate = (0.5, 1.5, -1.5)
-        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
-    }
-
     def Sphere "Sphere_Left" (
         active = true
         prepend apiSchemas = ["MaterialBindingAPI"]
     )
     {
-        rel material:binding = </Root/GridMaterial/GridMaterial> (
+        rel material:binding = </Root/Material> (
             bindMaterialAs = "weakerThanDescendants"
         )
         double radius = 0.1
         quatf xformOp:orient = (1, 0, 0, 0)
         float3 xformOp:scale = (1, 1, 1)
-        float3 xformOp:translate = (-0.5, 1.5, -1.5)
+        float3 xformOp:translate = (-0.3, 0.5, 0)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def RealityKitComponent "VFXEmitter"
+        {
+            uniform token info:id = "RealityKit.VFXEmitter"
+
+            def RealityKitStruct "currentState"
+            {
+                token birthDirection = "Normal"
+                token birthLocation = "Volume"
+                int64 burstCount = 300
+                token emitterShape = "Sphere"
+
+                def RealityKitStruct "mainEmitter"
+                {
+                    float birthRateVariation = 2
+                    float colorEvolutionPower = 1
+                    token opacityOverLife = "QuickFadeInOut"
+                    double particleLifeSpan = 5
+                    float particleMass = 1
+                }
+
+                def RealityKitStruct "spawnedEmitter"
+                {
+                }
+            }
+        }
     }
 
     def "GridMaterial" (
@@ -45,6 +56,146 @@ def Xform "Root"
     {
         float3 xformOp:scale = (1, 1, 1)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        over "GridMaterial"
+        {
+            token outputs:mtlx:surface.connect = </Root/GridMaterial/GridMaterial/MaterialXPreviewSurface.outputs:out>
+            token outputs:surface.connect = </Root/GridMaterial/GridMaterial/UsdPreviewSurface.outputs:surface>
+            float2 ui:nodegraph:realitykit:subgraphOutputs:size = (181.5, 99)
+
+            over "MaterialXPreviewSurface" (
+                active = true
+            )
+            {
+                float2 ui:nodegraph:node:size = (207.5, 307)
+            }
+
+            over "Remap"
+            {
+                float2 ui:nodegraph:node:size = (94, 181)
+            }
+
+            over "Fractional"
+            {
+                float2 ui:nodegraph:node:size = (154.5, 109)
+            }
+
+            over "Multiply"
+            {
+                float2 ui:nodegraph:node:size = (60, 36)
+            }
+
+            over "Combine3"
+            {
+                float2 ui:nodegraph:node:size = (145, 54)
+            }
+
+            over "Subtract"
+            {
+                float2 ui:nodegraph:node:size = (61.5, 36)
+            }
+
+            over "Absval"
+            {
+                float2 ui:nodegraph:node:size = (121.5, 53)
+            }
+
+            over "BaseColor"
+            {
+                float2 ui:nodegraph:node:size = (151, 53)
+            }
+
+            over "LineColor"
+            {
+                float2 ui:nodegraph:node:size = (151, 53)
+            }
+
+            over "Texcoord"
+            {
+                float2 ui:nodegraph:node:size = (180.5, 53)
+            }
+
+            over "LineCounts"
+            {
+                float2 ui:nodegraph:node:size = (151.5, 53)
+            }
+
+            over "LineWidths"
+            {
+                float2 ui:nodegraph:node:size = (150, 53)
+            }
+
+            over "Separate2"
+            {
+                float2 ui:nodegraph:node:size = (115, 127)
+            }
+
+            over "Min"
+            {
+                float2 ui:nodegraph:node:size = (113, 40)
+            }
+
+            over "Range"
+            {
+                float2 ui:nodegraph:node:size = (98, 217)
+            }
+
+            def Shader "UsdPreviewSurface" (
+                active = false
+            )
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                token outputs:surface
+            }
+        }
+    }
+
+    def Material "Material"
+    {
+        token outputs:mtlx:surface.connect = </Root/Material/PreviewSurface.outputs:out>
+        token outputs:realitykit:vertex
+        prepend token outputs:surface.connect = </Root/Material/UsdPreviewSurface.outputs:surface>
+        string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:realitykit:vertex"]
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (299.25, 99.5)
+        float2 ui:nodegraph:realitykit:subgraphOutputs:size = (181.5, 99)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 7
+
+        def Shader "PreviewSurface" (
+            active = false
+        )
+        {
+            uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+            float inputs:clearcoat = 0.01
+            color3f inputs:diffuseColor = (1, 0.5763723, 0) (
+                colorSpace = "srgb_texture"
+            )
+            color3f inputs:emissiveColor = (0.016804177, 0.198351, 1) (
+                colorSpace = "srgb_texture"
+            )
+            float inputs:ior = 1
+            float inputs:opacity = 0.75
+            float inputs:roughness = 1
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (74.25, 99.5)
+            float2 ui:nodegraph:node:size = (148.5, 199)
+            int ui:nodegraph:node:stackingOrder = 6
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:diffuseColor"]
+        }
+
+        def Shader "UsdPreviewSurface"
+        {
+            uniform token info:id = "UsdPreviewSurface"
+            float inputs:clearcoatRoughness = 0
+            color3f inputs:emissiveColor = (1, 1, 1) (
+                colorSpace = "srgb_displayp3"
+            )
+            float inputs:ior = 0
+            normal3f inputs:normal = (0, 0, 0)
+            float inputs:occlusion = 0
+            float inputs:opacity = 0
+            float inputs:roughness = 0
+            token outputs:surface
+        }
     }
 }
 
