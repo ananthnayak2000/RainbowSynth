@@ -31,7 +31,9 @@ def Xform "Root"
                 token birthDirection = "Normal"
                 token birthLocation = "Volume"
                 int64 burstCount = 300
+                float3 emissionDirection = (44, 1, 0)
                 token emitterShape = "Sphere"
+                bool loops = 0
 
                 def RealityKitStruct "mainEmitter"
                 {

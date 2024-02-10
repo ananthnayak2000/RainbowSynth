@@ -17,7 +17,6 @@ struct ImmersiveView: View {
             content.add(particleModel)
         }
     }
-    
     func particleSystem() -> ParticleEmitterComponent {
         var particles = ParticleEmitterComponent()
         particles.timing = .repeating(warmUp: 0, emit:ParticleEmitterComponent.Timing.VariableDuration(duration:1), idle: ParticleEmitterComponent.Timing.VariableDuration(duration: 1))
