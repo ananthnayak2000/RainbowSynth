@@ -59,7 +59,9 @@ class SequenceViewModel: ObservableObject {
     }
     
     func burst(){
-        self.particleSystem.mainEmitter.color = .evolving(start: .single(.red), end: .single(.green))
+        self.particleSystem.mainEmitter.birthRate = 1000
+        self.particleSystem.mainEmitter.lifeSpan = 30
+        
         print("bursted")
     }
     func startSequence(times : [Double]) {
