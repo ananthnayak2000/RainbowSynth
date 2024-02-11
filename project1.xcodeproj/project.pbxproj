@@ -47,7 +47,6 @@
 		187B27372B75AD7400FDD0C5 = {
 			isa = PBXGroup;
 			children = (
-				C62F60D62B783D5400EEF482 /* NetworkManager.swift */,
 				187B27422B75AD7400FDD0C5 /* project1 */,
 				187B27432B75AD7400FDD0C5 /* Packages */,
 				187B27412B75AD7400FDD0C5 /* Products */,
@@ -68,6 +67,7 @@
 				187B27472B75AD7400FDD0C5 /* project1App.swift */,
 				187B27492B75AD7400FDD0C5 /* ContentView.swift */,
 				187B274B2B75AD7400FDD0C5 /* ImmersiveView.swift */,
+				C62F60D62B783D5400EEF482 /* NetworkManager.swift */,
 				187B274D2B75AD7400FDD0C5 /* ImageBasedLighting.skybox */,
 				187B274F2B75AD7500FDD0C5 /* Assets.xcassets */,
 				187B27542B75AD7500FDD0C5 /* Info.plist */,
