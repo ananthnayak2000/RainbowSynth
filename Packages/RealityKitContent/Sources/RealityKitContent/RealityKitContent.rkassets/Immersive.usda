@@ -33,7 +33,8 @@ def Xform "Root"
                 int64 burstCount = 300
                 float3 emissionDirection = (44, 1, 0)
                 token emitterShape = "Sphere"
-                bool loops = 0
+                bool isEmitting = 1
+                bool loops = 1
 
                 def RealityKitStruct "mainEmitter"
                 {
@@ -42,6 +43,8 @@ def Xform "Root"
                     token opacityOverLife = "QuickFadeInOut"
                     double particleLifeSpan = 5
                     float particleMass = 1
+                    float4 startColorA = (0.89674306, 0.7718698, 0, 1)
+                    bool useStartColorRange = 0
                 }
 
                 def RealityKitStruct "spawnedEmitter"

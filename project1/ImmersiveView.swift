@@ -9,10 +9,27 @@ import SwiftUI
 import RealityKit
 import RealityKitContent
 import Combine
+import AVFoundation
+var player: AVAudioPlayer?
+
+func playSound() {
+    guard let path = Bundle.main.path(forResource: "czt", ofType:"wav") else {
+        return
+    }
+    let url = URL(fileURLWithPath: path)
+
+    do {
+        player = try AVAudioPlayer(contentsOf: url)
+        player?.play()
+        
+    } catch let error {
+        print(error.localizedDescription)
+    }
+}
 
 class SequenceViewModel: ObservableObject {
     private var cancellable: AnyCancellable?
-    private let numbers = [1, 2, 3, 4, 5, 9] // Example array of numbers
+    private let numbers = [5,6,7,8,9,20,20] // Example array of numbers
     private let delaySeconds = 10.0 // Delay in seconds between each number
 
     @Published var particleSystem = ParticleEmitterComponent()
@@ -20,14 +37,15 @@ class SequenceViewModel: ObservableObject {
     // Define a callback variable
     var numberUpdated: ((Int) -> Void)?
     func setupParticleSystem() {
-        self.particleSystem.timing = .repeating(warmUp: 0, emit:ParticleEmitterComponent.Timing.VariableDuration(duration:1), idle: ParticleEmitterComponent.Timing.VariableDuration(duration: 1))
+//        self.particleSystem.timing = .repeating(warmUp: 0, emit:ParticleEmitterComponent.Timing.VariableDuration(duration:1), idle: ParticleEmitterComponent.Timing.VariableDuration(duration: 1))
         self.particleSystem.emitterShape = .sphere
         self.particleSystem.birthLocation = .volume
         self.particleSystem.birthDirection = .normal
         self.particleSystem.emitterShapeSize = [10, 10, 10] * 0.05
         
         self.particleSystem.mainEmitter.birthRate = 300
-        self.particleSystem.burstCount = 300
+        self.particleSystem.burstCount = 2000
+        self.particleSystem.burstCountVariation = 0
         //particles.mainEmitter.BurstCount = 100
         self.particleSystem.mainEmitter.size = 0.02
         self.particleSystem.mainEmitter.lifeSpan = 5
@@ -45,12 +63,10 @@ class SequenceViewModel: ObservableObject {
         cancellable = Publishers.Sequence(sequence: numbers)
             .flatMap { number in
                 Just(number)
-                    .delay(for: .seconds(self.delaySeconds), scheduler: RunLoop.main)
+                    .delay(for: .seconds(number), scheduler: RunLoop.main)
             }
             .sink(receiveValue: { [weak self] number in
-                // Instead of setting a published property, call the callback with the current number
-                self?.numberUpdated?(number)
-                print("Current number: \(number)")
+                self?.burst()
             })
     }
 
@@ -66,14 +82,13 @@ struct ImmersiveView: View {
             let particleModel = ModelEntity()
            
             
+            viewModel.setupParticleSystem()
             particleModel.components.set(viewModel.particleSystem)
             content.add(particleModel)
             viewModel.startSequence()
         }.onAppear {
-            // Setup the callback
-            viewModel.setupParticleSystem()
-            viewModel.numberUpdated = { number in
-                viewModel.burst()            }
+            
+            playSound()// Setup the callback
         }
     }
     
