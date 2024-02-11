@@ -114,7 +114,7 @@ struct ImmersiveView: View {
             content.add(particleModel)
             viewModel.startSequence()
         }.onAppear {
-            let urlString = "http://127.0.0.1:3000/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
+            let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
             viewModel.fetchDataFromEndpoint(urlString: urlString)
             // Setup the callback
             viewModel.setupParticleSystem()
