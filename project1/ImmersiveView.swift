@@ -59,11 +59,11 @@ class SequenceViewModel: ObservableObject {
     }
     
     func burst(){
-        self.particleSystem.burst()
+        self.particleSystem.mainEmitter.color = .evolving(start: .single(.red), end: .single(.green))
         print("bursted")
     }
-    func startSequence() {
-        cancellable = Publishers.Sequence(sequence: numbers)
+    func startSequence(times : [Double]) {
+        cancellable = Publishers.Sequence(sequence: times)
             .flatMap { number in
                 Just(number)
                     .delay(for: .seconds(number), scheduler: RunLoop.main)
@@ -85,9 +85,17 @@ class SequenceViewModel: ObservableObject {
                             self?.durations = decodedData.durations
                             self?.loudness = decodedData.loudness
                             self?.pitches = decodedData.pitches
+                            let value = decodedData.loudness.enumerated().map{ (index, element) in
+                                if(element > -10){
+                                    return decodedData.durations[index]
+                                }else{
+                                    return nil
+                                }
+                            }.compactMap{$0}
+                           print(value)
                             
                             // Optionally, trigger actions based on the fetched data
-                            self?.startSequenceBasedOnFetchedData()
+                            self?.startSequence(times: value)
                         } catch {
                             print("Failed to decode data: \(error.localizedDescription)")
                         }
@@ -129,7 +137,7 @@ struct ImmersiveView: View {
             viewModel.setupParticleSystem()
             particleModel.components.set(viewModel.particleSystem)
             content.add(particleModel)
-            viewModel.startSequence()
+            //viewModel.startSequence()
         }.onAppear {
             playSound()// Setup the callback
             let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
