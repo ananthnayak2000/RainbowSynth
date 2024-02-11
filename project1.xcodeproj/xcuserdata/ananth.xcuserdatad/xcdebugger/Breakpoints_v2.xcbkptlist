@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bucket
+   uuid = "D931A4B9-79C1-42AA-A66F-023D58E6B856"
+   type = "1"
+   version = "2.0">
+   <Breakpoints>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "78336BA5-162D-4290-BA8C-3D3D203C5468"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "project1/ImmersiveView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "17"
+            endingLineNumber = "17"
+            landmarkName = "playSound()"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "78336BA5-162D-4290-BA8C-3D3D203C5468 - 89a954b3e6d0dc8c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "project1.playSound() -&gt; ()"
+                  moduleName = "project1"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ananth/Desktop/visionProject1/project1/project1/ImmersiveView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "17"
+                  endingLineNumber = "17"
+                  offsetFromSymbolStart = "1056">
+               </Location>
+               <Location
+                  uuid = "78336BA5-162D-4290-BA8C-3D3D203C5468 - 89a954b3e6d0dc8c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "project1.playSound() -&gt; ()"
+                  moduleName = "project1"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ananth/Desktop/visionProject1/project1/project1/ImmersiveView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "17"
+                  endingLineNumber = "17"
+                  offsetFromSymbolStart = "1048">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "5D77F8A8-9C47-4502-9FC9-54741D008AE3"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "project1/ImmersiveView.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "23"
+            endingLineNumber = "23"
+            landmarkName = "playSound()"
+            landmarkType = "9">
+            <Locations>
+               <Location
+                  uuid = "5D77F8A8-9C47-4502-9FC9-54741D008AE3 - 89a954b3e6d0dfca"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "project1.playSound() -&gt; ()"
+                  moduleName = "project1"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ananth/Desktop/visionProject1/project1/project1/ImmersiveView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23"
+                  offsetFromSymbolStart = "872">
+               </Location>
+               <Location
+                  uuid = "5D77F8A8-9C47-4502-9FC9-54741D008AE3 - 89a954b3e6d0dfca"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "project1.playSound() -&gt; ()"
+                  moduleName = "project1"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/ananth/Desktop/visionProject1/project1/project1/ImmersiveView.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "23"
+                  endingLineNumber = "23"
+                  offsetFromSymbolStart = "864">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+   </Breakpoints>
+</Bucket>
