@@ -19,13 +19,15 @@ struct ContentView: View {
 
     var body: some View {
         VStack {
-            Model3D(named: "Scene", bundle: realityKitContentBundle)
+            Model3D(named: "Rainbow Synth", bundle: realityKitContentBundle)
                 .padding(.bottom, 50)
 
-            Text("Hello, Ananth !")
-            Text("Are you ready to experience a world of Music")
-
-            Toggle("Show Immersive Space", isOn: $showImmersiveSpace)
+            Text(immersiveSpaceIsShown ? "Welcome to the Immersive World of Music" : "Hello, wanderer!")
+                .animation(.easeInOut(duration: 5))
+            Text(immersiveSpaceIsShown ? "Enjoy your journey!" : "Are you ready to experience a world of Music")
+                .animation(.easeInOut(duration: 5))
+            
+            Toggle(immersiveSpaceIsShown ? "Hide Rainbow Synthesizer" : "Show Rainbow Synthesizer", isOn: $showImmersiveSpace)
                 .toggleStyle(.button)
                 .padding(.top, 50)
         }

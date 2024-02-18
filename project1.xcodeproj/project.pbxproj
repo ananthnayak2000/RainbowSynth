@@ -14,7 +14,7 @@
 		187B274E2B75AD7400FDD0C5 /* ImageBasedLighting.skybox in Resources */ = {isa = PBXBuildFile; fileRef = 187B274D2B75AD7400FDD0C5 /* ImageBasedLighting.skybox */; };
 		187B27502B75AD7500FDD0C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187B274F2B75AD7500FDD0C5 /* Assets.xcassets */; };
 		187B27532B75AD7500FDD0C5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187B27522B75AD7500FDD0C5 /* Preview Assets.xcassets */; };
-		187B275C2B784C4A00FDD0C5 /* czt.wav in Resources */ = {isa = PBXBuildFile; fileRef = 187B275B2B784C4A00FDD0C5 /* czt.wav */; };
+		AC07106B2B819220006DDC3C /* czt.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AC07106A2B819220006DDC3C /* czt.mp3 */; };
 		C62F60D72B783D5400EEF482 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C62F60D62B783D5400EEF482 /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -28,7 +28,7 @@
 		187B274F2B75AD7500FDD0C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		187B27522B75AD7500FDD0C5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		187B27542B75AD7500FDD0C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		187B275B2B784C4A00FDD0C5 /* czt.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = czt.wav; sourceTree = "<group>"; };
+		AC07106A2B819220006DDC3C /* czt.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = czt.mp3; sourceTree = "<group>"; };
 		C62F60D62B783D5400EEF482 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -79,7 +79,7 @@
 		187B27432B75AD7400FDD0C5 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				187B275B2B784C4A00FDD0C5 /* czt.wav */,
+				AC07106A2B819220006DDC3C /* czt.mp3 */,
 				187B27442B75AD7400FDD0C5 /* RealityKitContent */,
 			);
 			path = Packages;
@@ -154,7 +154,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				187B275C2B784C4A00FDD0C5 /* czt.wav in Resources */,
+				AC07106B2B819220006DDC3C /* czt.mp3 in Resources */,
 				187B27502B75AD7500FDD0C5 /* Assets.xcassets in Resources */,
 				187B27532B75AD7500FDD0C5 /* Preview Assets.xcassets in Resources */,
 				187B274E2B75AD7400FDD0C5 /* ImageBasedLighting.skybox in Resources */,

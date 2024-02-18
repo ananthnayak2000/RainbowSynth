@@ -1,0 +1,24 @@
+{
+  "workbench.colorCustomizations": {
+    "titleBar.activeForeground": "#002e7c",
+    "titleBar.inactiveForeground": "#002e7c",
+    "titleBar.activeBackground": "#dfff2c",
+    "titleBar.inactiveBackground": "#a4e02c"
+  },
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.formatOnSave": false
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": false
+  },
+  "eslint.alwaysShowStatus": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  },
+  "prettier.disableLanguages": [
+    "javascript",
+    "javascriptreact"
+  ],
+  "github-enterprise.uri": "https://git.corp.adobe.com"
+}

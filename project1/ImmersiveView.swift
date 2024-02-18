@@ -13,7 +13,7 @@ import AVFoundation
 var player: AVAudioPlayer?
 
 func playSound() {
-    guard let path = Bundle.main.path(forResource: "czt", ofType:"wav") else {
+    guard let path = Bundle.main.path(forResource: "czt", ofType:"mp3") else {
         return
     }
     let url = URL(fileURLWithPath: path)
@@ -27,6 +27,17 @@ func playSound() {
     }
 }
 
+extension UIColor {
+    static func random() -> UIColor {
+        return UIColor(
+            red: CGFloat(drand48()),
+            green: CGFloat(drand48()),
+            blue: CGFloat(drand48()),
+            alpha: 1.0
+        )
+    }
+}
+
 class SequenceViewModel: ObservableObject {
     private var cancellable: AnyCancellable?
     private let numbers = [5,6,7,8,9,20,20] // Example array of numbers
@@ -37,8 +48,10 @@ class SequenceViewModel: ObservableObject {
     @Published var loudness: [Double] = []
     @Published var pitches: [[Double]] = [[]]
     
-    // Define a callback variable
+    // Define a callback variable that will be triggered when a number is updated
+    // This is triggered from startSequence
     var numberUpdated: ((Int) -> Void)?
+
     func setupParticleSystem() {
 //        self.particleSystem.timing = .repeating(warmUp: 0, emit:ParticleEmitterComponent.Timing.VariableDuration(duration:1), idle: ParticleEmitterComponent.Timing.VariableDuration(duration: 1))
         self.particleSystem.emitterShape = .sphere
@@ -54,24 +67,32 @@ class SequenceViewModel: ObservableObject {
         self.particleSystem.mainEmitter.lifeSpan = 5
         self.particleSystem.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
         self.particleSystem.mainEmitter.spreadingAngle = 1
-        
-        
     }
     
     func burst(){
-        self.particleSystem.mainEmitter.birthRate = 1000
-        self.particleSystem.mainEmitter.lifeSpan = 30
-        
+        self.particleSystem.mainEmitter.color = .evolving(start: .single(UIColor.random()), end: .single(UIColor.random()))
         print("bursted")
     }
+    
+    // The `startSequence` function takes an array of time intervals (in seconds) as input.
+    // It uses the Combine framework to create a sequence of delayed actions. 
+    // The Publishers.Sequence publisher emits each time interval to the flatMap operator, which creates a new Just publisher 
+    // that emits the time interval and then completes. The Just publisher is delayed by the time interval using the delay(for:scheduler:) operator. 
+    // A sequence of actions is created where each action is delayed by the corresponding time interval in the input array.
+    // When each time interval elapses, the `burst` function is called to trigger a burst of particles in the particle system.
     func startSequence(times : [Double]) {
         cancellable = Publishers.Sequence(sequence: times)
             .flatMap { number in
-                Just(number)
-                    .delay(for: .seconds(number), scheduler: RunLoop.main)
+                Deferred {
+                    Future<Int, Never> { promise in
+                        DispatchQueue.main.asyncAfter(deadline: .now() + number) {
+                            promise(.success(Int(number)))
+                        }
+                    }
+                }.eraseToAnyPublisher()
             }
             .sink(receiveValue: { [weak self] number in
-                self?.burst()
+                self?.numberUpdated?(number) // Call numberUpdated which has been set up as a callback in onAppear of the ImmersiveView
             })
     }
     
@@ -130,24 +151,23 @@ struct EndpointData: Decodable {
 
 struct ImmersiveView: View {
     @StateObject private var viewModel = SequenceViewModel()
+    @State private var particleModel = ModelEntity()
 
     var body: some View {
         RealityView { content in
-            let particleModel = ModelEntity()
-           
-            
             viewModel.setupParticleSystem()
             particleModel.components.set(viewModel.particleSystem)
             content.add(particleModel)
-            //viewModel.startSequence()
-        }.onAppear {
-            playSound()// Setup the callback
+        }
+        .onAppear {
+            playSound()
             let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
             viewModel.fetchDataFromEndpoint(urlString: urlString)
-            // Setup the callback
-            viewModel.setupParticleSystem()
             viewModel.numberUpdated = { number in
-                viewModel.burst()            }
+                viewModel.burst()
+                // Reassign the updated particleSystem to the ModelEntity
+                particleModel.components.set(viewModel.particleSystem)
+            }
         }
     }
     
