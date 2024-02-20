@@ -169,6 +169,9 @@ struct ImmersiveView: View {
                 particleModel.components.set(viewModel.particleSystem)
             }
         }
+        .onDisappear() {
+            player?.stop()
+        }
     }
     
 }
