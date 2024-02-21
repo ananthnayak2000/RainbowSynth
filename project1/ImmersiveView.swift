@@ -33,7 +33,7 @@ extension UIColor {
             red: CGFloat(drand48()),
             green: CGFloat(drand48()),
             blue: CGFloat(drand48()),
-            alpha: 1.0
+            alpha: CGFloat(drand48())
         )
     }
 }
@@ -41,7 +41,8 @@ extension UIColor {
 class SequenceViewModel: ObservableObject {
     private var cancellable: AnyCancellable?
     private let numbers = [5,6,7,8,9,20,20] // Example array of numbers
-    private let delaySeconds = 10.0 // Delay in seconds between each number
+    private let delaySeconds = Float.random(in: 1.0...10.0) // Delay in seconds between each number
+    private let randomSize = Float.random(in: 0.02...0.8)
 
     @Published var particleSystem = ParticleEmitterComponent()
     @Published var durations: [Double] = []
@@ -57,20 +58,23 @@ class SequenceViewModel: ObservableObject {
         self.particleSystem.emitterShape = .sphere
         self.particleSystem.birthLocation = .volume
         self.particleSystem.birthDirection = .normal
-        self.particleSystem.emitterShapeSize = [10, 10, 10] * 0.05
+        self.particleSystem.emitterShapeSize = [10, 10, 10] * Float.random(in: 0.05...0.80)
         
         self.particleSystem.mainEmitter.birthRate = 300
         self.particleSystem.burstCount = 2000
-        self.particleSystem.burstCountVariation = 0
+        self.particleSystem.burstCountVariation = 20
         //particles.mainEmitter.BurstCount = 100
-        self.particleSystem.mainEmitter.size = 0.02
-        self.particleSystem.mainEmitter.lifeSpan = 5
+        self.particleSystem.mainEmitter.size = randomSize
+        self.particleSystem.mainEmitter.lifeSpan = 2
         self.particleSystem.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
         self.particleSystem.mainEmitter.spreadingAngle = 1
     }
     
     func burst(){
         self.particleSystem.mainEmitter.color = .evolving(start: .single(UIColor.random()), end: .single(UIColor.random()))
+        self.particleSystem.mainEmitter.birthRate = Float.random(in: 50.0...600)
+        self.particleSystem.mainEmitter.size = Float.random(in: 0.01...0.5)
+        self.particleSystem.mainEmitter.lifeSpan = Double.random(in: 0.1...3.0)
         print("bursted")
     }
     
