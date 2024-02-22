@@ -37,6 +37,9 @@ extension UIColor {
             alpha: CGFloat(drand48())
         )
     }
+    static func rgba(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alpha: CGFloat) -> UIColor {
+        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: alpha)
+    }
 }
 
 class SequenceViewModel: ObservableObject {
@@ -81,7 +84,19 @@ class SequenceViewModel: ObservableObject {
                 Float.random(in: 0.005...0.05) * randomSeed,
                 Float.random(in: 0.005...0.05) * randomSeed,
                 Float.random(in: 0.005...0.05) * randomSeed,
-            ],                      
+            ], 
+            "colorStart": [
+                CGFloat.random(in: 10...255),
+                CGFloat.random(in: 10...255),
+                CGFloat.random(in: 10...255),
+                CGFloat.random(in: 10...255),
+            ],
+            "colorEnd": [
+                CGFloat.random(in: 10...255),
+                CGFloat.random(in: 10...255),
+                CGFloat.random(in: 10...255),
+                CGFloat.random(in: 10...255),
+            ]
             // "emitterShapeSize": [
             //     Float.random(in: 0.8...5) ,
             //     Float.random(in: 0.8...5) ,
@@ -95,25 +110,26 @@ class SequenceViewModel: ObservableObject {
         return parameters
     }
 
-    func emitterShapeFromInt(_ shapeInt: Int) -> SCNParticleSystem.ParticleSystemShape {
-        switch shapeInt {
+    fileprivate func setEmitterShape(_ parameters: [String : Any]) {
+        let randomShape = parameters["emitterShape"] as! Int
+        switch randomShape {
         case 1:
-            return .cone
+            self.particleSystem.emitterShape = .cone
         case 2:
-            return .box
+            self.particleSystem.emitterShape = .box
         case 3:
-            return .cylinder
+            self.particleSystem.emitterShape = .cylinder
         case 4:
-            return .plane
+            self.particleSystem.emitterShape = .plane
         case 5:
-            return .torus
+            self.particleSystem.emitterShape = .torus
         case 6:
-            return .point
+            self.particleSystem.emitterShape = .point
         default:
-            return .sphere // Default to sphere if shapeInt doesn't match any known shapes
+            self.particleSystem.emitterShape = .sphere // Default to point if randomShape doesn't match any known shapes
         }
     }
-
+    
     func burst(){
         let randomSeed = 1.0 //Float.random(in: 0.2...2)
         let parameters = generateRandomParameters(randomSeed: Float(randomSeed))
@@ -121,14 +137,19 @@ class SequenceViewModel: ObservableObject {
         self.particleSystem.mainEmitter.birthRate = parameters["birthRate"] as! Float
         self.particleSystem.mainEmitter.size = parameters["size"] as! Float
         self.particleSystem.mainEmitter.lifeSpan = (parameters["lifeSpan"]) as! Double
-        self.particleSystem.mainEmitter.color = .evolving(start: .single(UIColor.random()), end: .single(UIColor.random()))
+        let colorStart = parameters["colorStart"] as! [CGFloat]
+        let colorEnd = parameters["colorStart"] as! [CGFloat]
+        self.particleSystem.mainEmitter.color = .evolving(
+            start: .single(UIColor.rgba(colorStart[0], colorStart[1], colorStart[2], 1)),
+            end: .single(UIColor.rgba(colorEnd[0], colorEnd[1], colorEnd[2], 1))
+        )
+        
         // experimental params added 
         let acceleration = parameters["acceleration"] as! [Float]
-        self.particleSystem.mainEmitter.acceleration = [acceleration[0], acceleration[1], acceleration[2]]        
-        let randomShape = parameters["emitterShape"] as! Int
-        let randomShape = parameters["emitterShape"] as! Int
-        self.particleSystem.emitterShape = emitterShapeFromInt(randomShape)
-        
+        self.particleSystem.mainEmitter.acceleration = [acceleration[0], acceleration[1], acceleration[2]]
+        setEmitterShape(parameters)
+
+
         // params that are not used to maintain some predictability 
 //        self.particleSystem.emitterShapeSize = [Float.random(in: 1...10), Float.random(in: 1...10), Float.random(in: 1...10)] * Float.random(in: 0.1...1.0)
 //        self.particleSystem.burstCount = parameters["burstCount"] as! Int
@@ -256,8 +277,8 @@ struct ImmersiveView: View {
         .onAppear {
 //            playSound()
             let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
-            viewModel.fetchDataFromEndpoint(urlString: urlString)
-//            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
+//            viewModel.fetchDataFromEndpoint(urlString: urlString)
+            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
             viewModel.numberUpdated = { number in
                 // Reassign the updated particleSystem to the ModelEntity
                 particleModel.components.set(viewModel.particleSystem)
