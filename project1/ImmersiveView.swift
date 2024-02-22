@@ -71,10 +71,6 @@ class SequenceViewModel: ObservableObject {
     }
     
     func generateRandomParameters(randomSeed: Float) -> [String: Any] {
-//        self.particleSystem.mainEmitter.color = .evolving(start: .single(UIColor.random()), end: .single(UIColor.random()))
-//        self.particleSystem.mainEmitter.birthRate = Float.random(in: 50.0...600)
-//        self.particleSystem.mainEmitter.size = Float.random(in: 0.01...0.5)
-//        self.particleSystem.mainEmitter.lifeSpan = Double.random(in: 0.1...3.0)
         let parameters: [String: Any] = [
             "randomSeed":  randomSeed,
             "emitterShapeSize": [
@@ -100,33 +96,36 @@ class SequenceViewModel: ObservableObject {
     func burst(){
         let randomSeed = 1.0 //Float.random(in: 0.2...2)
         let parameters = generateRandomParameters(randomSeed: Float(randomSeed))
-        let randomShape = parameters["emitterShape"] as! Int
-//        switch randomShape {
-//        case 1:
-//            self.particleSystem.emitterShape = .cone
-//        case 2:
-//            self.particleSystem.emitterShape = .box
-//        case 3:
-//            self.particleSystem.emitterShape = .cylinder
-//        case 4:
-//            self.particleSystem.emitterShape = .plane
-//        case 5:
-//            self.particleSystem.emitterShape = .torus
-//        case 6:
-//            self.particleSystem.emitterShape = .point
-//        default:
-//            self.particleSystem.emitterShape = .sphere // Default to point if randomShape doesn't match any known shapes
-//        }
-            
-//        self.particleSystem.emitterShapeSize = [Float.random(in: 1...10), Float.random(in: 1...10), Float.random(in: 1...10)] * Float.random(in: 0.1...1.0)
+        
         self.particleSystem.mainEmitter.birthRate = parameters["birthRate"] as! Float
-//        self.particleSystem.burstCount = parameters["burstCount"] as! Int
-//        self.particleSystem.burstCountVariation = parameters["burstCountVariation"] as! Int
         self.particleSystem.mainEmitter.size = parameters["size"] as! Float
         self.particleSystem.mainEmitter.lifeSpan = (parameters["lifeSpan"]) as! Double
-//        self.particleSystem.mainEmitter.spreadingAngle = parameters["spreadingAngle"] as! Float
         self.particleSystem.mainEmitter.color = .evolving(start: .single(UIColor.random()), end: .single(UIColor.random()))
-//        self.particleSystem.mainEmitter.color = .evolving(start: .single(.random()), end: .single(.random()))
+
+        
+        let randomShape = parameters["emitterShape"] as! Int
+        switch randomShape {
+        case 1:
+            self.particleSystem.emitterShape = .cone
+        case 2:
+            self.particleSystem.emitterShape = .box
+        case 3:
+            self.particleSystem.emitterShape = .cylinder
+        case 4:
+            self.particleSystem.emitterShape = .plane
+        case 5:
+            self.particleSystem.emitterShape = .torus
+        case 6:
+            self.particleSystem.emitterShape = .point
+        default:
+            self.particleSystem.emitterShape = .sphere // Default to point if randomShape doesn't match any known shapes
+        }
+            
+//        self.particleSystem.emitterShapeSize = [Float.random(in: 1...10), Float.random(in: 1...10), Float.random(in: 1...10)] * Float.random(in: 0.1...1.0)
+//        self.particleSystem.burstCount = parameters["burstCount"] as! Int
+//        self.particleSystem.burstCountVariation = parameters["burstCountVariation"] as! Int
+
+//        self.particleSystem.mainEmitter.spreadingAngle = parameters["spreadingAngle"] as! Float
         let acceleration = parameters["acceleration"] as! [Float]
         self.particleSystem.mainEmitter.acceleration = [acceleration[0], acceleration[1], acceleration[2]]
 
@@ -257,7 +256,7 @@ struct ImmersiveView: View {
                 particleModel.components.set(viewModel.particleSystem)
                 // Trigger a burst of particles afer model is updated
                 viewModel.burst()
-//                viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
+                viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
             }
         }
         .onDisappear() {
