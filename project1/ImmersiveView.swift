@@ -89,13 +89,13 @@ class SequenceViewModel: ObservableObject {
                 CGFloat.random(in: 10...255),
                 CGFloat.random(in: 10...255),
                 CGFloat.random(in: 10...255),
-                CGFloat.random(in: 10...255),
+                CGFloat.random(in: 100...255),
             ],
             "colorEnd": [
                 CGFloat.random(in: 10...255),
                 CGFloat.random(in: 10...255),
                 CGFloat.random(in: 10...255),
-                CGFloat.random(in: 10...255),
+                CGFloat.random(in: 100...255),
             ]
             // "emitterShapeSize": [
             //     Float.random(in: 0.8...5) ,
@@ -115,14 +115,14 @@ class SequenceViewModel: ObservableObject {
         switch randomShape {
         case 1:
             self.particleSystem.emitterShape = .cone
-        case 2:
-            self.particleSystem.emitterShape = .box
-        case 3:
-            self.particleSystem.emitterShape = .cylinder
+//        case 2:
+//            self.particleSystem.emitterShape = .box
+//        case 3:
+//            self.particleSystem.emitterShape = .cylinder
         case 4:
             self.particleSystem.emitterShape = .plane
-        case 5:
-            self.particleSystem.emitterShape = .torus
+//        case 5:
+//            self.particleSystem.emitterShape = .torus
         case 6:
             self.particleSystem.emitterShape = .point
         default:
@@ -140,8 +140,8 @@ class SequenceViewModel: ObservableObject {
         let colorStart = parameters["colorStart"] as! [CGFloat]
         let colorEnd = parameters["colorStart"] as! [CGFloat]
         self.particleSystem.mainEmitter.color = .evolving(
-            start: .single(UIColor.rgba(colorStart[0], colorStart[1], colorStart[2], 1)),
-            end: .single(UIColor.rgba(colorEnd[0], colorEnd[1], colorEnd[2], 1))
+            start: .single(UIColor.rgba(colorStart[0], colorStart[1], colorStart[2], colorStart[3])),
+            end: .single(UIColor.rgba(colorEnd[0], colorEnd[1], colorEnd[2], colorEnd[3]))
         )
         
         // experimental params added 
