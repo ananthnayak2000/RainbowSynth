@@ -275,10 +275,10 @@ struct ImmersiveView: View {
             content.add(particleModel)
         }
         .onAppear {
-//            playSound()
+            playSound()
             let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
-//            viewModel.fetchDataFromEndpoint(urlString: urlString)
-            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
+            viewModel.fetchDataFromEndpoint(urlString: urlString)
+//            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
             viewModel.numberUpdated = { number in
                 // Reassign the updated particleSystem to the ModelEntity
                 particleModel.components.set(viewModel.particleSystem)
