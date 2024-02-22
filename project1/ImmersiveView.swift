@@ -72,23 +72,25 @@ class SequenceViewModel: ObservableObject {
     
     func generateRandomParameters(randomSeed: Float) -> [String: Any] {
         let parameters: [String: Any] = [
-            "randomSeed":  randomSeed,
-            "emitterShapeSize": [
-                Float.random(in: 0.8...5) ,
-                Float.random(in: 0.8...5) ,
-                Float.random(in: 0.8...5)],
+            "randomSeed":  randomSeed,            
             "birthRate": Float.random(in: 50.0...600) * randomSeed,
-            "burstCount": Int.random(in: 1000...3000),
-            "burstCountVariation": Int.random(in: 0...500),
             "size": Float.random(in: 0.01...0.5),
+            "lifeSpan": Double.random(in: 0.1...3.0),
+            "emitterShape": Int.random(in: 1...7),
             "acceleration": [
                 Float.random(in: 0.005...0.05) * randomSeed,
                 Float.random(in: 0.005...0.05) * randomSeed,
                 Float.random(in: 0.005...0.05) * randomSeed,
-            ],
-            "lifeSpan": Double.random(in: 0.1...3.0),
-            "spreadingAngle": Float.random(in: 0...2) * randomSeed,
-            "emitterShape": Int.random(in: 1...7)
+            ],                      
+            // "emitterShapeSize": [
+            //     Float.random(in: 0.8...5) ,
+            //     Float.random(in: 0.8...5) ,
+            //     Float.random(in: 0.8...5)
+            // ],
+            // "burstCount": Int.random(in: 1000...3000),
+            // "burstCountVariation": Int.random(in: 0...500),
+
+            // "spreadingAngle": Float.random(in: 0...2) * randomSeed,
         ]
         return parameters
     }
@@ -96,13 +98,14 @@ class SequenceViewModel: ObservableObject {
     func burst(){
         let randomSeed = 1.0 //Float.random(in: 0.2...2)
         let parameters = generateRandomParameters(randomSeed: Float(randomSeed))
-        
+        // original parameters
         self.particleSystem.mainEmitter.birthRate = parameters["birthRate"] as! Float
         self.particleSystem.mainEmitter.size = parameters["size"] as! Float
         self.particleSystem.mainEmitter.lifeSpan = (parameters["lifeSpan"]) as! Double
         self.particleSystem.mainEmitter.color = .evolving(start: .single(UIColor.random()), end: .single(UIColor.random()))
-
-        
+        // experimental params added 
+        let acceleration = parameters["acceleration"] as! [Float]
+        self.particleSystem.mainEmitter.acceleration = [acceleration[0], acceleration[1], acceleration[2]]        
         let randomShape = parameters["emitterShape"] as! Int
         switch randomShape {
         case 1:
@@ -120,14 +123,12 @@ class SequenceViewModel: ObservableObject {
         default:
             self.particleSystem.emitterShape = .sphere // Default to point if randomShape doesn't match any known shapes
         }
-            
+        // params that are not used to maintain some predictability 
 //        self.particleSystem.emitterShapeSize = [Float.random(in: 1...10), Float.random(in: 1...10), Float.random(in: 1...10)] * Float.random(in: 0.1...1.0)
 //        self.particleSystem.burstCount = parameters["burstCount"] as! Int
 //        self.particleSystem.burstCountVariation = parameters["burstCountVariation"] as! Int
-
 //        self.particleSystem.mainEmitter.spreadingAngle = parameters["spreadingAngle"] as! Float
-        let acceleration = parameters["acceleration"] as! [Float]
-        self.particleSystem.mainEmitter.acceleration = [acceleration[0], acceleration[1], acceleration[2]]
+
 
         print("burst updated with parameters:")
         print(parameters)
