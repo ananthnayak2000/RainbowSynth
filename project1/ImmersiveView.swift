@@ -95,6 +95,25 @@ class SequenceViewModel: ObservableObject {
         return parameters
     }
 
+    func emitterShapeFromInt(_ shapeInt: Int) -> SCNParticleSystem.ParticleSystemShape {
+        switch shapeInt {
+        case 1:
+            return .cone
+        case 2:
+            return .box
+        case 3:
+            return .cylinder
+        case 4:
+            return .plane
+        case 5:
+            return .torus
+        case 6:
+            return .point
+        default:
+            return .sphere // Default to sphere if shapeInt doesn't match any known shapes
+        }
+    }
+
     func burst(){
         let randomSeed = 1.0 //Float.random(in: 0.2...2)
         let parameters = generateRandomParameters(randomSeed: Float(randomSeed))
@@ -107,22 +126,9 @@ class SequenceViewModel: ObservableObject {
         let acceleration = parameters["acceleration"] as! [Float]
         self.particleSystem.mainEmitter.acceleration = [acceleration[0], acceleration[1], acceleration[2]]        
         let randomShape = parameters["emitterShape"] as! Int
-        switch randomShape {
-        case 1:
-            self.particleSystem.emitterShape = .cone
-        case 2:
-            self.particleSystem.emitterShape = .box
-        case 3:
-            self.particleSystem.emitterShape = .cylinder
-        case 4:
-            self.particleSystem.emitterShape = .plane
-        case 5:
-            self.particleSystem.emitterShape = .torus
-        case 6:
-            self.particleSystem.emitterShape = .point
-        default:
-            self.particleSystem.emitterShape = .sphere // Default to point if randomShape doesn't match any known shapes
-        }
+        let randomShape = parameters["emitterShape"] as! Int
+        self.particleSystem.emitterShape = emitterShapeFromInt(randomShape)
+        
         // params that are not used to maintain some predictability 
 //        self.particleSystem.emitterShapeSize = [Float.random(in: 1...10), Float.random(in: 1...10), Float.random(in: 1...10)] * Float.random(in: 0.1...1.0)
 //        self.particleSystem.burstCount = parameters["burstCount"] as! Int
@@ -248,7 +254,7 @@ struct ImmersiveView: View {
             content.add(particleModel)
         }
         .onAppear {
-            playSound()
+//            playSound()
             let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
             viewModel.fetchDataFromEndpoint(urlString: urlString)
 //            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
