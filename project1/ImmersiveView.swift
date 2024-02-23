@@ -70,34 +70,7 @@ class SequenceViewModel: ObservableObject {
     }
     
     func burst(){
-        let randomSeed = 1.0 //Float.random(in: 0.2...2)
-        let parameters = ParticleSystemManager.generateRandomParameters(randomSeed: Float(randomSeed))
-        // original parameters
-        self.particleSystem.mainEmitter.birthRate = parameters["birthRate"] as! Float
-        self.particleSystem.mainEmitter.size = parameters["size"] as! Float
-        self.particleSystem.mainEmitter.lifeSpan = (parameters["lifeSpan"]) as! Double
-        let colorStart = parameters["colorStart"] as! [CGFloat]
-        let colorEnd = parameters["colorStart"] as! [CGFloat]
-        self.particleSystem.mainEmitter.color = .evolving(
-            start: .single(UIColor.rgba(colorStart[0], colorStart[1], colorStart[2], colorStart[3])),
-            end: .single(UIColor.rgba(colorEnd[0], colorEnd[1], colorEnd[2], colorEnd[3]))
-        )
-        
-        // experimental params added 
-        let acceleration = parameters["acceleration"] as! [Float]
-        self.particleSystem.mainEmitter.acceleration = [acceleration[0], acceleration[1], acceleration[2]]
-        setEmitterShape(parameters)
-
-
-        // params that are not used to maintain some predictability 
-//        self.particleSystem.emitterShapeSize = [Float.random(in: 1...10), Float.random(in: 1...10), Float.random(in: 1...10)] * Float.random(in: 0.1...1.0)
-//        self.particleSystem.burstCount = parameters["burstCount"] as! Int
-//        self.particleSystem.burstCountVariation = parameters["burstCountVariation"] as! Int
-//        self.particleSystem.mainEmitter.spreadingAngle = parameters["spreadingAngle"] as! Float
-
-
-        print("burst updated with parameters:")
-        print(parameters)
+        ParticleSystemManager.burst(&self.particleSystem)
     }
     
     // The `startSequence` function takes an array of time intervals and creates a sequence of actions.
@@ -206,8 +179,8 @@ struct ImmersiveView: View {
         .onAppear {
             playSound()
             let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
-            viewModel.fetchDataFromEndpoint(urlString: urlString)
-//            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
+//            viewModel.fetchDataFromEndpoint(urlString: urlString)
+            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
             viewModel.numberUpdated = { number in
                 // Reassign the updated particleSystem to the ModelEntity
                 particleModel.components.set(viewModel.particleSystem)

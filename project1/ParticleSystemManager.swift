@@ -41,6 +41,35 @@ struct ParticleSystemManager {
         particleSystem.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
         particleSystem.mainEmitter.spreadingAngle = 1
     }
+    
+    static func burst(_ particleSystem: inout ParticleEmitterComponent) {
+        let randomSeed = 1.0 //Float.random(in: 0.2...2)
+        let parameters = generateRandomParameters(randomSeed: Float(randomSeed))
+        // original parameters
+        particleSystem.mainEmitter.birthRate = parameters["birthRate"] as! Float
+        particleSystem.mainEmitter.size = parameters["size"] as! Float
+        particleSystem.mainEmitter.lifeSpan = (parameters["lifeSpan"]) as! Double
+        let colorStart = parameters["colorStart"] as! [CGFloat]
+        let colorEnd = parameters["colorStart"] as! [CGFloat]
+        particleSystem.mainEmitter.color = .evolving(
+            start: .single(UIColor.rgba(colorStart[0], colorStart[1], colorStart[2], colorStart[3])),
+            end: .single(UIColor.rgba(colorEnd[0], colorEnd[1], colorEnd[2], colorEnd[3]))
+        )
+        
+        // experimental params added
+        let acceleration = parameters["acceleration"] as! [Float]
+        particleSystem.mainEmitter.acceleration = [acceleration[0], acceleration[1], acceleration[2]]
+//        setEmitterShape(&particleSystem, parameters)
+
+        // params that are not used to maintain some predictability
+        // particleSystem.emitterShapeSize = [Float.random(in: 1...10), Float.random(in: 1...10), Float.random(in: 1...10)] * Float.random(in: 0.1...1.0)
+        // particleSystem.burstCount = parameters["burstCount"] as! Int
+        // particleSystem.burstCountVariation = parameters["burstCountVariation"] as! Int
+        // particleSystem.mainEmitter.spreadingAngle = parameters["spreadingAngle"] as! Float
+
+        print("burst updated with parameters:")
+        print(parameters)
+    }
 
     static func generateRandomParameters(randomSeed: Float) -> [String: Any] {
         let parameters: [String: Any] = [
