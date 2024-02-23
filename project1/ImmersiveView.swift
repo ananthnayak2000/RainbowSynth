@@ -28,19 +28,6 @@ func playSound() {
     }
 }
 
-extension UIColor {
-    static func random() -> UIColor {
-        return UIColor(
-            red: CGFloat(drand48()),
-            green: CGFloat(drand48()),
-            blue: CGFloat(drand48()),
-            alpha: CGFloat(drand48())
-        )
-    }
-    static func rgba(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alpha: CGFloat) -> UIColor {
-        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: alpha/255)
-    }
-}
 
 class SequenceViewModel: ObservableObject {
     private var cancellable: AnyCancellable?
@@ -57,57 +44,9 @@ class SequenceViewModel: ObservableObject {
     // This is triggered from startSequence
     var numberUpdated: ((Int) -> Void)?
 
-    func setupParticleSystem() {
-        self.particleSystem.emitterShape = .sphere
-        self.particleSystem.birthLocation = .volume
-        self.particleSystem.birthDirection = .normal
-        self.particleSystem.emitterShapeSize = [10, 10, 10] * Float.random(in: 0.05...0.80)
-        
-        self.particleSystem.mainEmitter.birthRate = 300
-        self.particleSystem.burstCount = 2000
-        self.particleSystem.burstCountVariation = 20
-        //particles.mainEmitter.BurstCount = 100
-        self.particleSystem.mainEmitter.size = randomSize
-        self.particleSystem.mainEmitter.lifeSpan = 2
-        self.particleSystem.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
-        self.particleSystem.mainEmitter.spreadingAngle = 1
-    }
-    
-    func generateRandomParameters(randomSeed: Float) -> [String: Any] {
-        let parameters: [String: Any] = [
-            "randomSeed":  randomSeed,            
-            "birthRate": Float.random(in: 50.0...600) * randomSeed,
-            "size": Float.random(in: 0.01...0.5),
-            "lifeSpan": Double.random(in: 0.1...3.0),
-            "emitterShape": Int.random(in: 1...7),
-            "acceleration": [
-                Float.random(in: 0.005...0.05) * randomSeed,
-                Float.random(in: 0.005...0.05) * randomSeed,
-                Float.random(in: 0.005...0.05) * randomSeed,
-            ], 
-            "colorStart": [
-                CGFloat.random(in: 10...255),
-                CGFloat.random(in: 10...255),
-                CGFloat.random(in: 10...255),
-                CGFloat.random(in: 100...255),
-            ],
-            "colorEnd": [
-                CGFloat.random(in: 10...255),
-                CGFloat.random(in: 10...255),
-                CGFloat.random(in: 10...255),
-                CGFloat.random(in: 100...255),
-            ]
-            // "emitterShapeSize": [
-            //     Float.random(in: 0.8...5) ,
-            //     Float.random(in: 0.8...5) ,
-            //     Float.random(in: 0.8...5)
-            // ],
-            // "burstCount": Int.random(in: 1000...3000),
-            // "burstCountVariation": Int.random(in: 0...500),
-
-            // "spreadingAngle": Float.random(in: 0...2) * randomSeed,
-        ]
-        return parameters
+    init() {
+        particleSystem = ParticleEmitterComponent() // Replace with your actual particle system initialization
+        ParticleSystemManager.setupParticleSystem(&particleSystem)
     }
 
     fileprivate func setEmitterShape(_ parameters: [String : Any]) {
@@ -132,7 +71,7 @@ class SequenceViewModel: ObservableObject {
     
     func burst(){
         let randomSeed = 1.0 //Float.random(in: 0.2...2)
-        let parameters = generateRandomParameters(randomSeed: Float(randomSeed))
+        let parameters = ParticleSystemManager.generateRandomParameters(randomSeed: Float(randomSeed))
         // original parameters
         self.particleSystem.mainEmitter.birthRate = parameters["birthRate"] as! Float
         self.particleSystem.mainEmitter.size = parameters["size"] as! Float
@@ -244,15 +183,6 @@ class SequenceViewModel: ObservableObject {
        self.startSequence(times: scaledValues)
    }
 
-    // Add a new method to start a sequence based on fetched data
-    func startSequence() {
-        // Example: Use `durations` to control the delay between actions
-        // This is just a placeholder to demonstrate how you might proceed
-        print("Starting sequence with fetched durations: \(durations)")
-        print("Starting sequence with fetched loudness: \(loudness)")
-        print("Starting sequence with fetched pitches: \(pitches)")
-    }
-    
     deinit {
         cancellable?.cancel()
     }
@@ -270,15 +200,14 @@ struct ImmersiveView: View {
 
     var body: some View {
         RealityView { content in
-            viewModel.setupParticleSystem()
             particleModel.components.set(viewModel.particleSystem)
             content.add(particleModel)
         }
         .onAppear {
             playSound()
             let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
-//            viewModel.fetchDataFromEndpoint(urlString: urlString)
-            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
+            viewModel.fetchDataFromEndpoint(urlString: urlString)
+//            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
             viewModel.numberUpdated = { number in
                 // Reassign the updated particleSystem to the ModelEntity
                 particleModel.components.set(viewModel.particleSystem)
