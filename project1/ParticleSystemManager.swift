@@ -21,7 +21,7 @@ extension UIColor {
         )
     }
     static func rgba(_ red: CGFloat, _ green: CGFloat, _ blue: CGFloat, _ alpha: CGFloat) -> UIColor {
-        return UIColor(red: red/255, green: green/255, blue: blue/255, alpha: alpha/255)
+        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
     }
 }
 
@@ -104,10 +104,10 @@ struct ParticleSystemManager {
                 Float.random(in: 0.005...0.05) * randomSeed,
             ],
             "colorStart": [
-                CGFloat.random(in: 10...255),
-                CGFloat.random(in: 10...255),
-                CGFloat.random(in: 10...255),
-                CGFloat.random(in: 100...255),
+                CGFloat.random(in: 0...1),
+                CGFloat.random(in: 0...1),
+                CGFloat.random(in: 0...1),
+                CGFloat.random(in: 0.5...1),
             ],
             "colorEnd": [
                 CGFloat.random(in: 10...255),
