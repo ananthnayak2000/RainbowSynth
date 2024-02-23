@@ -42,6 +42,26 @@ struct ParticleSystemManager {
         particleSystem.mainEmitter.spreadingAngle = 1
     }
     
+    static func setEmitterShape(_ particleSystem: inout ParticleEmitterComponent, parameters: [String : Any]) {
+        let randomShape = parameters["emitterShape"] as! Int
+        switch randomShape {
+        case 1:
+            particleSystem.emitterShape = .cone
+//        case 2:
+//            self.particleSystem.emitterShape = .box
+//        case 3:
+//            self.particleSystem.emitterShape = .cylinder
+        case 4:
+            particleSystem.emitterShape = .plane
+//        case 5:
+//            self.particleSystem.emitterShape = .torus
+        case 6:
+            particleSystem.emitterShape = .point
+        default:
+            particleSystem.emitterShape = .sphere // Default to point if randomShape doesn't match any known shapes
+        }
+    }
+    
     static func burst(_ particleSystem: inout ParticleEmitterComponent) {
         let randomSeed = 1.0 //Float.random(in: 0.2...2)
         let parameters = generateRandomParameters(randomSeed: Float(randomSeed))
@@ -59,7 +79,7 @@ struct ParticleSystemManager {
         // experimental params added
         let acceleration = parameters["acceleration"] as! [Float]
         particleSystem.mainEmitter.acceleration = [acceleration[0], acceleration[1], acceleration[2]]
-//        setEmitterShape(&particleSystem, parameters)
+        setEmitterShape(&particleSystem, parameters: parameters)
 
         // params that are not used to maintain some predictability
         // particleSystem.emitterShapeSize = [Float.random(in: 1...10), Float.random(in: 1...10), Float.random(in: 1...10)] * Float.random(in: 0.1...1.0)

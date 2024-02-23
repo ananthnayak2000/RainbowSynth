@@ -48,26 +48,6 @@ class SequenceViewModel: ObservableObject {
         particleSystem = ParticleEmitterComponent() // Replace with your actual particle system initialization
         ParticleSystemManager.setupParticleSystem(&particleSystem)
     }
-
-    fileprivate func setEmitterShape(_ parameters: [String : Any]) {
-        let randomShape = parameters["emitterShape"] as! Int
-        switch randomShape {
-        case 1:
-            self.particleSystem.emitterShape = .cone
-//        case 2:
-//            self.particleSystem.emitterShape = .box
-//        case 3:
-//            self.particleSystem.emitterShape = .cylinder
-        case 4:
-            self.particleSystem.emitterShape = .plane
-//        case 5:
-//            self.particleSystem.emitterShape = .torus
-        case 6:
-            self.particleSystem.emitterShape = .point
-        default:
-            self.particleSystem.emitterShape = .sphere // Default to point if randomShape doesn't match any known shapes
-        }
-    }
     
     func burst(){
         ParticleSystemManager.burst(&self.particleSystem)
@@ -179,8 +159,8 @@ struct ImmersiveView: View {
         .onAppear {
             playSound()
             let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
-//            viewModel.fetchDataFromEndpoint(urlString: urlString)
-            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
+            viewModel.fetchDataFromEndpoint(urlString: urlString)
+//            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
             viewModel.numberUpdated = { number in
                 // Reassign the updated particleSystem to the ModelEntity
                 particleModel.components.set(viewModel.particleSystem)
