@@ -15,6 +15,7 @@
 		187B27502B75AD7500FDD0C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187B274F2B75AD7500FDD0C5 /* Assets.xcassets */; };
 		187B27532B75AD7500FDD0C5 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 187B27522B75AD7500FDD0C5 /* Preview Assets.xcassets */; };
 		AC07106B2B819220006DDC3C /* czt.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = AC07106A2B819220006DDC3C /* czt.mp3 */; };
+		AC9D6D9B2B8870000074D161 /* ParticleSystemManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AC9D6D9A2B8870000074D161 /* ParticleSystemManager.swift */; };
 		C62F60D72B783D5400EEF482 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C62F60D62B783D5400EEF482 /* NetworkManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -29,6 +30,7 @@
 		187B27522B75AD7500FDD0C5 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		187B27542B75AD7500FDD0C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AC07106A2B819220006DDC3C /* czt.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = czt.mp3; sourceTree = "<group>"; };
+		AC9D6D9A2B8870000074D161 /* ParticleSystemManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticleSystemManager.swift; sourceTree = "<group>"; };
 		C62F60D62B783D5400EEF482 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -72,6 +74,7 @@
 				187B274F2B75AD7500FDD0C5 /* Assets.xcassets */,
 				187B27542B75AD7500FDD0C5 /* Info.plist */,
 				187B27512B75AD7500FDD0C5 /* Preview Content */,
+				AC9D6D9A2B8870000074D161 /* ParticleSystemManager.swift */,
 			);
 			path = project1;
 			sourceTree = "<group>";
@@ -168,6 +171,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AC9D6D9B2B8870000074D161 /* ParticleSystemManager.swift in Sources */,
 				C62F60D72B783D5400EEF482 /* NetworkManager.swift in Sources */,
 				187B274A2B75AD7400FDD0C5 /* ContentView.swift in Sources */,
 				187B27482B75AD7400FDD0C5 /* project1App.swift in Sources */,
