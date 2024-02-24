@@ -65,16 +65,15 @@ struct ParticleSystemManager {
     static func burst(_ particleSystem: inout ParticleEmitterComponent) {
         let randomSeed = 1.0 //Float.random(in: 0.2...2)
         let parameters = generateRandomParameters(randomSeed: Float(randomSeed))
-        // original parameters
-        particleSystem.mainEmitter.birthRate = parameters["birthRate"] as! Float
-        particleSystem.mainEmitter.size = parameters["size"] as! Float
-        particleSystem.mainEmitter.lifeSpan = (parameters["lifeSpan"]) as! Double
         let colorStart = parameters["colorStart"] as! [CGFloat]
         let colorEnd = parameters["colorStart"] as! [CGFloat]
         particleSystem.mainEmitter.color = .evolving(
             start: .single(UIColor.rgba(colorStart[0], colorStart[1], colorStart[2], colorStart[3])),
             end: .single(UIColor.rgba(colorEnd[0], colorEnd[1], colorEnd[2], colorEnd[3]))
         )
+        particleSystem.mainEmitter.birthRate = parameters["birthRate"] as! Float
+        particleSystem.mainEmitter.size = parameters["size"] as! Float
+        particleSystem.mainEmitter.lifeSpan = (parameters["lifeSpan"]) as! Double
         
         // experimental params added
         let acceleration = parameters["acceleration"] as! [Float]

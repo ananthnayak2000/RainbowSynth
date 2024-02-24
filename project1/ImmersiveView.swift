@@ -4,12 +4,14 @@
 //
 //  Created by Ananth Nayak on 2/8/24.
 //
+//This is the particle merge file. particle system 1 - Jochen  particle system 2 - Ananth. Particle system 1 for some reason doesn't change anymore!
 
 import SwiftUI
 import RealityKit
-import RealityKitContent
 import Combine
 import AVFoundation
+
+// Audio Player
 var player: AVAudioPlayer?
 
 func playSound() {
@@ -20,39 +22,29 @@ func playSound() {
 
     do {
         player = try AVAudioPlayer(contentsOf: url)
-        player!.numberOfLoops = -1 // Loop indefinitely
         player?.play()
-        
     } catch let error {
         print(error.localizedDescription)
     }
 }
 
-
+// ViewModel for the first particle system - Jochen
 class SequenceViewModel: ObservableObject {
-    private var cancellable: AnyCancellable?
-    private let numbers = [5,6,7,8,9,20,20] // Example array of numbers
-    private let delaySeconds = Float.random(in: 1.0...10.0) // Delay in seconds between each number
-    private let randomSize = Float.random(in: 0.02...0.8)
-
-    @Published var particleSystem = ParticleEmitterComponent()
-    @Published var durations: [Double] = []
-    @Published var loudness: [Double] = []
-    @Published var pitches: [[Double]] = [[]]
-    
-    // Define a callback variable that will be triggered when a number is updated
     // This is triggered from startSequence
     var numberUpdated: ((Int) -> Void)?
-
+    private var cancellable: AnyCancellable?
+    @Published var particleSystem = ParticleEmitterComponent()
+    
     init() {
-        particleSystem = ParticleEmitterComponent() // Replace with your actual particle system initialization
+        particleSystem = ParticleEmitterComponent()
         ParticleSystemManager.setupParticleSystem(&particleSystem)
     }
     
-    func burst(){
-        ParticleSystemManager.burst(&self.particleSystem)
+    func burst() {
+        DispatchQueue.main.async {
+            ParticleSystemManager.burst(&self.particleSystem)
+        }
     }
-    
     // The `startSequence` function takes an array of time intervals and creates a sequence of actions.
     // Each action is delayed by the corresponding time interval in the input array.
     // When each time interval elapses, the `burst` function is called to trigger a color update to the particles in the particle system.
@@ -90,40 +82,6 @@ class SequenceViewModel: ObservableObject {
                 self?.numberUpdated?(number) // Call numberUpdated which has been set up as a callback in onAppear of the ImmersiveView
             })
     }
-    
-    func fetchDataFromEndpoint(urlString: String) {
-        let networkManager = NetworkManager()
-        networkManager.fetchData(from: urlString) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let data):
-                    do {
-                        let decodedData = try JSONDecoder().decode(EndpointData.self, from: data)
-                        // Update the model with fetched data
-                        self?.durations = decodedData.durations
-                        self?.loudness = decodedData.loudness
-                        self?.pitches = decodedData.pitches
-                        let value = decodedData.loudness.enumerated().map{ (index, element) in
-                            if(element > -10){
-                                return decodedData.durations[index]
-                            }else{
-                                return nil
-                            }
-                        }.compactMap{$0}
-                       print(value)
-                        
-                        // Optionally, trigger actions based on the fetched data
-                        self?.startSequence(times: value)
-                    } catch {
-                        print("Failed to decode data: \(error.localizedDescription)")
-                    }
-                case .failure(let error):
-                    print("Failed to fetch data: \(error.localizedDescription)")
-                }
-            }
-        }
-    }
-    
    func initSequence(randomSeed: Float) {
        let values = [
            1.5, 1.0, 0.5, 0.2
@@ -141,26 +99,41 @@ class SequenceViewModel: ObservableObject {
     }
 }
 
-struct EndpointData: Decodable {
-    let durations: [Double]
-    let loudness: [Double]
-    let pitches: [[Double]]
-}
-
+// SwiftUI View
 struct ImmersiveView: View {
     @StateObject private var viewModel = SequenceViewModel()
     @State private var particleModel = ModelEntity()
+    @StateObject private var sequenceViewModel = SequenceViewModel()
+    @State private var currentParticleSize: Float = 0.5
+    @State private var currentParticleLifeSpan: Float = 1.0
+    @State private var currentParticleSpeed: Float = 0.01
+    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
+    private var sequenceParticleModel = ModelEntity()
+    private var timerParticleModel = ModelEntity()
 
     var body: some View {
         RealityView { content in
             particleModel.components.set(viewModel.particleSystem)
             content.add(particleModel)
+            if sequenceParticleModel.components[ParticleEmitterComponent.self] == nil {
+//                sequenceViewModel.setupParticleSystem()
+                sequenceParticleModel.components.set(sequenceViewModel.particleSystem)
+                content.add(sequenceParticleModel)
+            } else {
+                // Apply the updated particle system to the ModelEntity
+                sequenceParticleModel.components.set(sequenceViewModel.particleSystem)
+            }
+            if timerParticleModel.components[ParticleEmitterComponent.self] == nil {
+                timerParticleModel.components.set(particleSystem(size: currentParticleSize, lifeSpan: currentParticleLifeSpan, speed: currentParticleSpeed))
+                content.add(timerParticleModel)
+            }
         }
         .onAppear {
             playSound()
-            let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
-            viewModel.fetchDataFromEndpoint(urlString: urlString)
-//            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
+            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
+            let times = [2.0, 4.0, 6.0] // Example time intervals for bursts
+            sequenceViewModel.startSequence(times: times)
             viewModel.numberUpdated = { number in
                 // Reassign the updated particleSystem to the ModelEntity
                 particleModel.components.set(viewModel.particleSystem)
@@ -170,14 +143,60 @@ struct ImmersiveView: View {
                 viewModel.initSequence(randomSeed: Float(randomSeed))
             }
         }
+        .onReceive(timer) { _ in
+            updateParticleSystem(size: currentParticleSize == 0.5 ? 0.1 : 0.5,
+                                 lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
+                                 speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
+        }
         .onDisappear() {
             player?.stop()
         }
     }
-    
+
+    // Function for the second particle system
+    func particleSystem(size: Float, lifeSpan: Float, speed: Float) -> ParticleEmitterComponent {
+        var particles = ParticleEmitterComponent()
+        particles.timing = .repeating(warmUp: 0,
+                                      emit: ParticleEmitterComponent.Timing.VariableDuration(duration: 1),
+                                      idle: ParticleEmitterComponent.Timing.VariableDuration(duration: 10))
+        
+        particles.emitterShape = .sphere
+        particles.birthLocation = .surface
+        particles.birthDirection = .normal
+        particles.emissionDirection = SIMD3<Float>(x: 0, y: 1, z: 0)
+        particles.emitterShapeSize = [0.1, 0.1, 0.1]
+        particles.speed = speed
+        
+        particles.mainEmitter.birthRate = 500
+        particles.mainEmitter.size = size
+        particles.mainEmitter.lifeSpan = Double(lifeSpan)
+        particles.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
+        
+        return particles
+    }
+
+    // Function to update the second particle system properties
+    private func updateParticleSystem(size: Float, lifeSpan: Float, speed: Float) {
+        currentParticleSize = size
+        currentParticleLifeSpan = lifeSpan
+        currentParticleSpeed = speed
+
+        if var particles = timerParticleModel.components[ParticleEmitterComponent.self] {
+            particles.mainEmitter.size = size
+            particles.mainEmitter.lifeSpan = Double(lifeSpan)
+            particles.speed = speed
+            timerParticleModel.components.set(particles)
+        }
+        print("Updated second particle system with new size, lifespan, and speed")
+    }
 }
 
-#Preview {
-    ImmersiveView()
-        .previewLayout(.sizeThatFits)
+// Preview
+#if DEBUG
+struct ImmersiveView_Previews: PreviewProvider {
+    static var previews: some View {
+        ImmersiveView()
+            .previewLayout(.sizeThatFits)
+    }
 }
+#endif
