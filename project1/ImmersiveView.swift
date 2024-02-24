@@ -41,9 +41,7 @@ class SequenceViewModel: ObservableObject {
     }
     
     func burst() {
-        DispatchQueue.main.async {
-            ParticleSystemManager.burst(&self.particleSystem)
-        }
+        ParticleSystemManager.burst(&self.particleSystem)
     }
     // The `startSequence` function takes an array of time intervals and creates a sequence of actions.
     // Each action is delayed by the corresponding time interval in the input array.
