@@ -169,12 +169,12 @@ struct ImmersiveView: View {
                 originalParticleViewModel.burst()
                 let randomSeed = 1.0// Float.random(in: 0.7...2)
                 originalParticleViewModel.initSequence(randomSeed: Float(randomSeed))
-                let index = Array(0...5).randomElement()!
-//                particleEntityPreset.transform.translation = SIMD3<Float>(x: 0, y: -0.7, z: -0.5)
-   
-                var particles = presets[index]
-                particles.mainEmitter.color = .evolving(start: .single(.white), end: .single(.blue))
-                particleEntityPreset.components[ParticleEmitterComponent.self] = particles
+//                let index = Array(0...5).randomElement()!
+////                particleEntityPreset.transform.translation = SIMD3<Float>(x: 0, y: -0.7, z: -0.5)
+//   
+//                var particles = presets[index]
+//                particles.mainEmitter.color = .evolving(start: .single(.white), end: .single(.blue))
+//                particleEntityPreset.components[ParticleEmitterComponent.self] = particles
             }
         }
         .onReceive(timer_1) { _ in
