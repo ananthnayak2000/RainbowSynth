@@ -134,25 +134,24 @@ struct ImmersiveView: View {
 
     var body: some View {
         RealityView { content in
-            originalParticleModel.transform.translation = SIMD3<Float>(x: 2, y: 0.9, z: 0.2)
+            originalParticleModel.transform.translation = SIMD3<Float>(x: 2, y: 0.9, z: -20)
             originalParticleModel.components.set(originalParticleViewModel.particleSystem)
             content.add(originalParticleModel)
             
-            sequenceParticleModel.transform.translation = SIMD3<Float>(x: -2, y: 0.7, z: -0.5)
+            sequenceParticleModel.transform.translation = SIMD3<Float>(x: -2, y: 0.7, z: -15)
             sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
             content.add(sequenceParticleModel)
-            timerParticleModel.transform.translation = SIMD3<Float>(x: 0, y: 1.7, z: 1)
+            timerParticleModel.transform.translation = SIMD3<Float>(x: 0, y: 1.7, z: 10)
             timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
             content.add(timerParticleModel)
 
-            let index = Array(0...5).randomElement()!
         
   
-            particleEntityPreset.transform.translation = SIMD3<Float>(x: -1.8, y: 0.7, z: 1)
-    
+            particleEntityPreset.transform.translation = SIMD3<Float>(x: -1.8, y: 0.7, z: -10)
+            let index = 2//Array(0...5).randomElement()!
             var particles = presets[index]
             particles.mainEmitter.size = 4
-            particles.mainEmitter.color = .evolving(start: .single(.white), end: .single(.blue))
+            particles.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
             particleEntityPreset.components[ParticleEmitterComponent.self] = particles
             content.add(particleEntityPreset)
         }
