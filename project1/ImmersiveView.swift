@@ -110,7 +110,7 @@ struct ImmersiveView: View {
     @State private var currentParticleSpeed: Float = 0.01
 
 
-    @State private var originalParticleModel = ModelEntity()
+    private var originalParticleModel = ModelEntity()
     private var sequenceParticleModel = ModelEntity()
     private var timerParticleModel = ModelEntity()
 
@@ -145,13 +145,13 @@ struct ImmersiveView: View {
             }
         }
         .onReceive(timer_1) { _ in
-            updateParticleSystem(size: currentParticleSize == 0.02 ? 0.05 : 0.1,
+            updateParticleSystem(size: currentParticleSize == 0.003 ? 0.05 : 0.092,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
             sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
         }
         .onReceive(timer_2) { _ in
-            updateParticleSystem(size: currentParticleSize == 0.04 ? 0.08 : 0.03,
+            updateParticleSystem(size: currentParticleSize == 0.0055 ? 0.001 : 0.012,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
             sequenceParticleModel.components.set(sequenceViewModel_2.particleSystem)
@@ -172,19 +172,20 @@ struct ImmersiveView: View {
         particles.birthLocation = .surface
         particles.birthDirection = .normal
         particles.emissionDirection = SIMD3<Float>(x: 0, y: 1, z: 0)
-        particles.emitterShapeSize = [0.1, 0.1, 0.1]
+        particles.emitterShapeSize = [0.2, 0.2, 0.2]
         particles.speed = speed
         
         particles.mainEmitter.birthRate = 500
         particles.mainEmitter.size = size
         particles.mainEmitter.lifeSpan = Double(lifeSpan)
         particles.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
-        
+
         return particles
     }
 
     // Function to update the second particle system properties
     private func updateParticleSystem(size: Float, lifeSpan: Float, speed: Float) {
+        // to update particle system in this way tha variable has to be declared as a state variable
         currentParticleSize = size
         currentParticleLifeSpan = lifeSpan
         currentParticleSpeed = speed
