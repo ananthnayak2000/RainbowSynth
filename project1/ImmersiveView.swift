@@ -31,7 +31,7 @@ func playSound() {
 // ViewModel for the first particle system - Jochen
 class SequenceViewModel: ObservableObject {
     // This is triggered from startSequence
-    var numberUpdated: ((Int) -> Void)?
+    var sequenceAction: ((Int) -> Void)?
     private var cancellable: AnyCancellable?
     @Published var particleSystem = ParticleEmitterComponent()
     
@@ -77,7 +77,7 @@ class SequenceViewModel: ObservableObject {
                 .eraseToAnyPublisher()
             }
             .sink(receiveValue: { [weak self] number in
-                self?.numberUpdated?(number) // Call numberUpdated which has been set up as a callback in onAppear of the ImmersiveView
+                self?.sequenceAction?(number) // Call numberUpdated which has been set up as a callback in onAppear of the ImmersiveView
             })
     }
    func initSequence(randomSeed: Float) {
@@ -100,33 +100,40 @@ class SequenceViewModel: ObservableObject {
 // SwiftUI View
 struct ImmersiveView: View {
     @StateObject private var originalParticleViewModel = SequenceViewModel()
-    @StateObject private var sequenceViewModel = SequenceViewModel()
-    
+    @StateObject private var sequenceViewModel_1 = SequenceViewModel()
+    @StateObject private var sequenceViewModel_2 = SequenceViewModel()
+
     @State private var currentParticleSize: Float = 0.5
     @State private var currentParticleLifeSpan: Float = 1.0
     @State private var currentParticleSpeed: Float = 0.01
-    let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+
 
     @State private var originalParticleModel = ModelEntity()
     private var sequenceParticleModel = ModelEntity()
     private var timerParticleModel = ModelEntity()
 
+    // timer to drive sequenceParticleModel
+    // This could be cool if we know the tempo of the music then this can emit in time with the music
+    let timer_1 = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
+    let timer_2 = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
+
     var body: some View {
         RealityView { content in
             originalParticleModel.components.set(originalParticleViewModel.particleSystem)
             content.add(originalParticleModel)
-            sequenceParticleModel.components.set(sequenceViewModel.particleSystem)
+            sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
             content.add(sequenceParticleModel)
-            // timerParticleModel ain't working
-            timerParticleModel.components.set(particleSystem(size: currentParticleSize, lifeSpan: currentParticleLifeSpan, speed: currentParticleSpeed))
+            timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
             content.add(timerParticleModel)
         }
         .onAppear {
             playSound()
             originalParticleViewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
-            let times = [2.0, 4.0, 6.0] // Example time intervals for bursts
-            sequenceViewModel.startSequence(times: times)
-            originalParticleViewModel.numberUpdated = { number in
+            let times_1 = [2.0, 4.0, 6.0] // Example time intervals for bursts
+            sequenceViewModel_1.startSequence(times: times_1)
+            let times_2 = [1.0, 5.0] // Example time intervals for bursts
+            sequenceViewModel_2.startSequence(times: times_2)
+            originalParticleViewModel.sequenceAction = { number in
                 // Reassign the updated particleSystem to the ModelEntity
                 originalParticleModel.components.set(originalParticleViewModel.particleSystem)
                 // Trigger a burst of particles afer model is updated
@@ -135,11 +142,17 @@ struct ImmersiveView: View {
                 originalParticleViewModel.initSequence(randomSeed: Float(randomSeed))
             }
         }
-        .onReceive(timer) { _ in
+        .onReceive(timer_1) { _ in
             updateParticleSystem(size: currentParticleSize == 0.5 ? 0.1 : 0.5,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
-                                 sequenceParticleModel.components.set(sequenceViewModel.particleSystem)
+            sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
+        }
+        .onReceive(timer_2) { _ in
+            updateParticleSystem(size: currentParticleSize == 0.5 ? 0.1 : 0.5,
+                                 lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
+                                 speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
+            sequenceParticleModel.components.set(sequenceViewModel_2.particleSystem)
         }
         .onDisappear() {
             player?.stop()
