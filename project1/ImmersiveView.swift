@@ -145,13 +145,13 @@ struct ImmersiveView: View {
             }
         }
         .onReceive(timer_1) { _ in
-            updateParticleSystem(size: currentParticleSize == 0.5 ? 0.1 : 0.5,
+            updateParticleSystem(size: currentParticleSize == 0.02 ? 0.05 : 0.1,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
             sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
         }
         .onReceive(timer_2) { _ in
-            updateParticleSystem(size: currentParticleSize == 0.5 ? 0.1 : 0.5,
+            updateParticleSystem(size: currentParticleSize == 0.04 ? 0.08 : 0.03,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
             sequenceParticleModel.components.set(sequenceViewModel_2.particleSystem)
