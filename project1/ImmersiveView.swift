@@ -99,45 +99,40 @@ class SequenceViewModel: ObservableObject {
 
 // SwiftUI View
 struct ImmersiveView: View {
-    @StateObject private var viewModel = SequenceViewModel()
-    @State private var particleModel = ModelEntity()
+    @StateObject private var originalParticleViewModel = SequenceViewModel()
     @StateObject private var sequenceViewModel = SequenceViewModel()
+    
     @State private var currentParticleSize: Float = 0.5
     @State private var currentParticleLifeSpan: Float = 1.0
     @State private var currentParticleSpeed: Float = 0.01
     let timer = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
 
+    @State private var originalParticleModel = ModelEntity()
     private var sequenceParticleModel = ModelEntity()
     private var timerParticleModel = ModelEntity()
 
     var body: some View {
         RealityView { content in
-            particleModel.components.set(viewModel.particleSystem)
-            content.add(particleModel)
-            if sequenceParticleModel.components[ParticleEmitterComponent.self] == nil {
-                sequenceParticleModel.components.set(sequenceViewModel.particleSystem)
-                content.add(sequenceParticleModel)
-            } else {
-                // Apply the updated particle system to the ModelEntity
-                sequenceParticleModel.components.set(sequenceViewModel.particleSystem)
-            }
-            if timerParticleModel.components[ParticleEmitterComponent.self] == nil {
-                timerParticleModel.components.set(particleSystem(size: currentParticleSize, lifeSpan: currentParticleLifeSpan, speed: currentParticleSpeed))
-                content.add(timerParticleModel)
-            }
+            originalParticleModel.components.set(originalParticleViewModel.particleSystem)
+            content.add(originalParticleModel)
+            sequenceParticleModel.components.set(sequenceViewModel.particleSystem)
+            content.add(sequenceParticleModel)
+            // timerParticleModel ain't working
+            timerParticleModel.components.set(particleSystem(size: currentParticleSize, lifeSpan: currentParticleLifeSpan, speed: currentParticleSpeed))
+            content.add(timerParticleModel)
         }
         .onAppear {
             playSound()
-            viewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
+            originalParticleViewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
             let times = [2.0, 4.0, 6.0] // Example time intervals for bursts
             sequenceViewModel.startSequence(times: times)
-            viewModel.numberUpdated = { number in
+            originalParticleViewModel.numberUpdated = { number in
                 // Reassign the updated particleSystem to the ModelEntity
-                particleModel.components.set(viewModel.particleSystem)
+                originalParticleModel.components.set(originalParticleViewModel.particleSystem)
                 // Trigger a burst of particles afer model is updated
-                viewModel.burst()
+                originalParticleViewModel.burst()
                 let randomSeed = 1.0// Float.random(in: 0.7...2)
-                viewModel.initSequence(randomSeed: Float(randomSeed))
+                originalParticleViewModel.initSequence(randomSeed: Float(randomSeed))
             }
         }
         .onReceive(timer) { _ in
