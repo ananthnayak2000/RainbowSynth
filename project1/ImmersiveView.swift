@@ -115,7 +115,6 @@ struct ImmersiveView: View {
             particleModel.components.set(viewModel.particleSystem)
             content.add(particleModel)
             if sequenceParticleModel.components[ParticleEmitterComponent.self] == nil {
-//                sequenceViewModel.setupParticleSystem()
                 sequenceParticleModel.components.set(sequenceViewModel.particleSystem)
                 content.add(sequenceParticleModel)
             } else {
@@ -145,6 +144,7 @@ struct ImmersiveView: View {
             updateParticleSystem(size: currentParticleSize == 0.5 ? 0.1 : 0.5,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
+                                 sequenceParticleModel.components.set(sequenceViewModel.particleSystem)
         }
         .onDisappear() {
             player?.stop()
@@ -179,11 +179,11 @@ struct ImmersiveView: View {
         currentParticleLifeSpan = lifeSpan
         currentParticleSpeed = speed
 
-        if var particles = timerParticleModel.components[ParticleEmitterComponent.self] {
+        if var particles = sequenceParticleModel.components[ParticleEmitterComponent.self] {
             particles.mainEmitter.size = size
             particles.mainEmitter.lifeSpan = Double(lifeSpan)
             particles.speed = speed
-            timerParticleModel.components.set(particles)
+            sequenceParticleModel.components.set(particles)
         }
         print("Updated second particle system with new size, lifespan, and speed")
     }
