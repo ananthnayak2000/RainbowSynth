@@ -33,11 +33,13 @@ class SequenceViewModel: ObservableObject {
     // This is triggered from startSequence
     var sequenceAction: ((Int) -> Void)?
     private var cancellable: AnyCancellable?
+    var color: UIColor
     @Published var particleSystem = ParticleEmitterComponent()
     
-    init() {
+    init(color: UIColor) {
+        self.color = color
         particleSystem = ParticleEmitterComponent()
-        ParticleSystemManager.setupParticleSystem(&particleSystem)
+        ParticleSystemManager.setupParticleSystem(&particleSystem, color: color)
     }
     
     func burst() {
@@ -99,12 +101,12 @@ class SequenceViewModel: ObservableObject {
 
 // SwiftUI View
 struct ImmersiveView: View {
-    @StateObject private var originalParticleViewModel = SequenceViewModel()
-    @StateObject private var sequenceViewModel_1 = SequenceViewModel()
-    @StateObject private var sequenceViewModel_2 = SequenceViewModel()
+    @StateObject private var originalParticleViewModel = SequenceViewModel(color: UIColor.red)
+    @StateObject private var sequenceViewModel_1 = SequenceViewModel(color: UIColor.blue)
+    @StateObject private var sequenceViewModel_2 = SequenceViewModel(color: UIColor.green)
 
-    @State private var currentParticleSize: Float = 0.5
-    @State private var currentParticleLifeSpan: Float = 1.0
+    @State private var currentParticleSize: Float = 0.1
+    @State private var currentParticleLifeSpan: Float = 0.5
     @State private var currentParticleSpeed: Float = 0.01
 
 
@@ -114,8 +116,8 @@ struct ImmersiveView: View {
 
     // timer to drive sequenceParticleModel
     // This could be cool if we know the tempo of the music then this can emit in time with the music
-    let timer_1 = Timer.publish(every: 1, on: .main, in: .common).autoconnect()
-    let timer_2 = Timer.publish(every: 0.5, on: .main, in: .common).autoconnect()
+    let timer_1 = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
+    let timer_2 = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
 
     var body: some View {
         RealityView { content in
