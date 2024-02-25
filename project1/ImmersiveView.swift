@@ -134,24 +134,24 @@ struct ImmersiveView: View {
 
     var body: some View {
         RealityView { content in
-            originalParticleModel.transform.translation = SIMD3<Float>(x: 0.6, y: -0.9, z: -0.2)
+            originalParticleModel.transform.translation = SIMD3<Float>(x: 2, y: 0.9, z: 0.2)
             originalParticleModel.components.set(originalParticleViewModel.particleSystem)
             content.add(originalParticleModel)
             
-            sequenceParticleModel.transform.translation = SIMD3<Float>(x: 0.1, y: -0.7, z: -0.5)
+            sequenceParticleModel.transform.translation = SIMD3<Float>(x: -2, y: 0.7, z: -0.5)
             sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
             content.add(sequenceParticleModel)
-            timerParticleModel.transform.translation = SIMD3<Float>(x: 0.3, y: -0.7, z: -1)
+            timerParticleModel.transform.translation = SIMD3<Float>(x: 0, y: 1.7, z: 1)
             timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
             content.add(timerParticleModel)
 
             let index = Array(0...5).randomElement()!
         
   
-            particleEntityPreset.transform.translation = SIMD3<Float>(x: 0.3, y: -0.7, z: -1)
+            particleEntityPreset.transform.translation = SIMD3<Float>(x: -1.8, y: 0.7, z: 1)
     
             var particles = presets[index]
-            particles.mainEmitter.size = 2
+            particles.mainEmitter.size = 4
             particles.mainEmitter.color = .evolving(start: .single(.white), end: .single(.blue))
             particleEntityPreset.components[ParticleEmitterComponent.self] = particles
             content.add(particleEntityPreset)
@@ -171,8 +171,7 @@ struct ImmersiveView: View {
                 let randomSeed = 1.0// Float.random(in: 0.7...2)
                 originalParticleViewModel.initSequence(randomSeed: Float(randomSeed))
                 let index = Array(0...5).randomElement()!
-            
-                particleEntityPreset.transform.translation = SIMD3<Float>(x: 0, y: -0.7, z: -0.5)
+//                particleEntityPreset.transform.translation = SIMD3<Float>(x: 0, y: -0.7, z: -0.5)
    
                 var particles = presets[index]
                 particles.mainEmitter.color = .evolving(start: .single(.white), end: .single(.blue))
