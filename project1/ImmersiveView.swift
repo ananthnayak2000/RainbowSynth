@@ -187,7 +187,7 @@ struct ImmersiveView: View {
             updateParticleSystem(size: currentParticleSize == 0.0055 ? 0.001 : 0.012,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
-            sequenceParticleModel.components.set(sequenceViewModel_2.particleSystem)
+            timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
         }
         .onDisappear() {
             player?.stop()
@@ -227,6 +227,10 @@ struct ImmersiveView: View {
             particles.mainEmitter.size = size
             particles.mainEmitter.lifeSpan = Double(lifeSpan)
             particles.speed = speed
+            particles.mainEmitter.color = .evolving(
+                start: .single(UIColor.rgba(CGFloat.random(in: 0...1), 1, CGFloat.random(in: 0...1), CGFloat.random(in: 0.5...1))),
+                end: .single(UIColor.rgba(CGFloat.random(in: 0...1), 0.6, CGFloat.random(in: 0...1), CGFloat.random(in: 0...0.1)))
+            )
             sequenceParticleModel.components.set(particles)
         }
         print("Updated second particle system with new size, lifespan, and speed")
