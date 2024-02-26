@@ -13,7 +13,8 @@ struct ContentView: View {
 
     @State private var showImmersiveSpace = false
     @State private var immersiveSpaceIsShown = false
-
+    @State private var immersiveEffect: SurroundingsEffect? = nil
+    
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
 
@@ -31,6 +32,7 @@ struct ContentView: View {
                 .toggleStyle(.button)
                 .padding(.top, 32)
         }
+        .preferredSurroundingsEffect(immersiveEffect)
         .padding()
         .onChange(of: showImmersiveSpace) { _, newValue in
             Task {
@@ -38,6 +40,7 @@ struct ContentView: View {
                     switch await openImmersiveSpace(id: "ImmersiveSpace") {
                     case .opened:
                         immersiveSpaceIsShown = true
+                        immersiveEffect = .systemDark
                     case .error, .userCancelled:
                         fallthrough
                     @unknown default:
@@ -47,6 +50,7 @@ struct ContentView: View {
                 } else if immersiveSpaceIsShown {
                     await dismissImmersiveSpace()
                     immersiveSpaceIsShown = false
+                    immersiveEffect = nil
                 }
             }
         }

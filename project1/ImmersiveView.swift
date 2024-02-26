@@ -156,7 +156,6 @@ struct ImmersiveView: View {
             particleModel.components.set(viewModel.particleSystem)
             content.add(particleModel)
         }
-        .preferredSurroundingsEffect(.systemDark)
         .onAppear {
             playSound()
             let urlString = "https://synesthesia-tau.vercel.app/analyze?track_id=4ozN7LaIUodj1ADWdempuv"
