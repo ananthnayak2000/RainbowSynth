@@ -114,7 +114,12 @@ struct ImmersiveView: View {
     private var sequenceParticleModel = ModelEntity()
     private var timerParticleModel = ModelEntity()
     
+    @State var particleEntityFireworks = Entity()
     @State var particleEntitySparks = Entity()
+    @State var particleEntityMagic = Entity()
+    @State var particleEntityRain = Entity()
+    @State var particleEntitySnow = Entity()
+
     let presets: [ParticleEmitterComponent] = [
         .Presets.fireworks,
         .Presets.impact,
@@ -126,8 +131,8 @@ struct ImmersiveView: View {
 
     // timer to drive sequenceParticleModel
     // This could be cool if we know the tempo of the music then this can emit in time with the music
-    let timer_1 = Timer.publish(every: 3, on: .main, in: .common).autoconnect()
-    let timer_2 = Timer.publish(every: 2, on: .main, in: .common).autoconnect()
+    let timer_1 = Timer.publish(every: 0.566, on: .main, in: .common).autoconnect() // fires every quarter note at 106BPM
+    let timer_2 = Timer.publish(every: 1.132, on: .main, in: .common).autoconnect() // fires every half note at 106BPM
 
     var body: some View {
         RealityView { content in
@@ -141,17 +146,30 @@ struct ImmersiveView: View {
             timerParticleModel.transform.translation = SIMD3<Float>(x: 0, y: 1.7, z: -10)
             timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
             content.add(timerParticleModel)
-
-        
-  
+//
+            particleEntityFireworks.transform.translation = SIMD3<Float>(x: -28, y: 0, z: -35)
+            var particles2 = presets[1]
+            particles2.mainEmitter.size = 1
+            particles2.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
+            particleEntityFireworks.components[ParticleEmitterComponent.self] = particles2
+            content.add(particleEntityFireworks)
+            
             particleEntitySparks.transform.translation = SIMD3<Float>(x: -1.8, y: 15, z: -25)
-            let index = 2//Array(0...5).randomElement()!
-            var particles = presets[index]
+            var particles = presets[2]
             particles.mainEmitter.size = 4
             particles.mainEmitter.angularSpeed = 0.1
             particles.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
             particleEntitySparks.components[ParticleEmitterComponent.self] = particles
             content.add(particleEntitySparks)
+            
+            particleEntityMagic.transform.translation = SIMD3<Float>(x: 20, y: 15, z: -25)
+            var particles3 = presets[3]
+            particles3.mainEmitter.size = 4
+            particles3.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
+            particleEntityMagic.components[ParticleEmitterComponent.self] = particles3
+            content.add(particleEntityMagic)
+
+            
         }
         .onAppear {
             playSound()
@@ -229,7 +247,7 @@ struct ImmersiveView: View {
                 start: .single(UIColor.rgba(CGFloat.random(in: 0...1), 1, CGFloat.random(in: 0...1), CGFloat.random(in: 0.5...1))),
                 end: .single(UIColor.rgba(CGFloat.random(in: 0...1), 0.6, CGFloat.random(in: 0...1), CGFloat.random(in: 0...0.1)))
             )
-            sequenceParticleModel.components.set(particles)
+//            sequenceParticleModel.components.set(particles)
         }
         print("Updated second particle system with new size, lifespan, and speed")
     }
