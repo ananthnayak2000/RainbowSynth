@@ -13,8 +13,8 @@ struct project1App: App {
         WindowGroup {
             ContentView()
                 .frame(
-                    minWidth: 350, idealWidth: 380, maxWidth: 380,
-                    minHeight: 350, idealHeight: 380, maxHeight: 380)
+                    minWidth: 350, idealWidth: 360, maxWidth: 360,
+                    minHeight: 350, idealHeight: 360, maxHeight: 360)
         }
         .windowResizability(.contentSize)
 
