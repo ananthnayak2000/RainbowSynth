@@ -60,6 +60,7 @@ struct ContentView: View {
             if newScenePhase == .inactive || newScenePhase == .background {
                 showImmersiveSpace = false
                 immersiveEffect = nil
+                exit(0) // force quit
             }
         }
     }
