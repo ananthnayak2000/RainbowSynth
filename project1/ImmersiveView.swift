@@ -102,8 +102,8 @@ class SequenceViewModel: ObservableObject {
 // SwiftUI View
 struct ImmersiveView: View {
     @StateObject private var originalParticleViewModel = SequenceViewModel(color: UIColor.red)
-    @StateObject private var sequenceViewModel_1 = SequenceViewModel(color: UIColor.blue)
-    @StateObject private var sequenceViewModel_2 = SequenceViewModel(color: UIColor.green)
+    @StateObject private var sequenceParticleViewModel = SequenceViewModel(color: UIColor.blue)
+    @StateObject private var timerParticleViewModel = SequenceViewModel(color: UIColor.green)
 
     @State private var currentParticleSize: Float = 0.1
     @State private var currentParticleLifeSpan: Float = 0.5
@@ -140,16 +140,16 @@ struct ImmersiveView: View {
             originalParticleModel.components.set(originalParticleViewModel.particleSystem)
             content.add(originalParticleModel)
             
-            sequenceParticleModel.transform.translation = SIMD3<Float>(x: -2, y: 0.7, z: -15)
-            sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
+            sequenceParticleModel.transform.translation = SIMD3<Float>(x: 12, y: 0.7, z: -15)
+            sequenceParticleModel.components.set(sequenceParticleViewModel.particleSystem)
             content.add(sequenceParticleModel)
-            timerParticleModel.transform.translation = SIMD3<Float>(x: 0, y: 1.7, z: -10)
-            timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
+            timerParticleModel.transform.translation = SIMD3<Float>(x: 0, y: 0, z: -10)
+            timerParticleModel.components.set(timerParticleViewModel.particleSystem)
             content.add(timerParticleModel)
 //
             particleEntityFireworks.transform.translation = SIMD3<Float>(x: -28, y: 0, z: -35)
             var particles2 = presets[1]
-            particles2.mainEmitter.size = 1
+            particles2.mainEmitter.size = 2
             particles2.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
             particleEntityFireworks.components[ParticleEmitterComponent.self] = particles2
             content.add(particleEntityFireworks)
@@ -172,12 +172,12 @@ struct ImmersiveView: View {
             
         }
         .onAppear {
-            playSound()
+//            playSound()
             originalParticleViewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
-            let times_1 = [2.0, 4.0, 6.0] // Example time intervals for bursts
-            sequenceViewModel_1.startSequence(times: times_1)
-            let times_2 = [1.0, 5.0] // Example time intervals for bursts
-            sequenceViewModel_2.startSequence(times: times_2)
+            let times_1 = [1.698, 1.698, 1.698] // Example time intervals for bursts
+            sequenceParticleViewModel.startSequence(times: times_1)
+//            let times_2 = [1.0/*,*/ 5.0]  Example time intervals for bursts
+            timerParticleViewModel.startSequence(times: times_1)
             originalParticleViewModel.sequenceAction = { number in
                 // Reassign the updated particleSystem to the ModelEntity
                 originalParticleModel.components.set(originalParticleViewModel.particleSystem)
@@ -197,13 +197,13 @@ struct ImmersiveView: View {
             updateParticleSystem(size: currentParticleSize >= 0.0055 ? currentParticleSize - 0.01 : currentParticleSize + 0.01,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
-            sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
+            sequenceParticleModel.components.set(sequenceParticleViewModel.particleSystem)
         }
         .onReceive(timer_2) { _ in
             updateParticleSystem(size: currentParticleSize >= 0.06 ? currentParticleSize - 0.02 : currentParticleSize + 0.02,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
-            timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
+            timerParticleModel.components.set(timerParticleViewModel.particleSystem)
         }
         .onDisappear() {
             player?.stop()
@@ -243,10 +243,10 @@ struct ImmersiveView: View {
             particles.mainEmitter.size = size
             particles.mainEmitter.lifeSpan = Double(lifeSpan)
             particles.speed = speed
-            particles.mainEmitter.color = .evolving(
-                start: .single(UIColor.rgba(CGFloat.random(in: 0...1), 1, CGFloat.random(in: 0...1), CGFloat.random(in: 0.5...1))),
-                end: .single(UIColor.rgba(CGFloat.random(in: 0...1), 0.6, CGFloat.random(in: 0...1), CGFloat.random(in: 0...0.1)))
-            )
+//            particles.mainEmitter.color = .evolving(
+//                start: .single(UIColor.rgba(CGFloat.random(in: 0...1), 1, CGFloat.random(in: 0...1), CGFloat.random(in: 0.5...1))),
+//                end: .single(UIColor.rgba(CGFloat.random(in: 0...1), 0.6, CGFloat.random(in: 0...1), CGFloat.random(in: 0...0.1)))
+//            )
 //            sequenceParticleModel.components.set(particles)
         }
         print("Updated second particle system with new size, lifespan, and speed")
