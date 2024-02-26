@@ -147,7 +147,7 @@ struct ImmersiveView: View {
 
         
   
-            particleEntityPreset.transform.translation = SIMD3<Float>(x: -1.8, y: 0.7, z: -10)
+            particleEntityPreset.transform.translation = SIMD3<Float>(x: -1.8, y: 5, z: -30)
             let index = 2//Array(0...5).randomElement()!
             var particles = presets[index]
             particles.mainEmitter.size = 4
@@ -178,13 +178,13 @@ struct ImmersiveView: View {
             }
         }
         .onReceive(timer_1) { _ in
-            updateParticleSystem(size: currentParticleSize == 0.003 ? 0.05 : 0.092,
+            updateParticleSystem(size: currentParticleSize == 0.0055 ? 0.001 : 0.012,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
             sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
         }
         .onReceive(timer_2) { _ in
-            updateParticleSystem(size: currentParticleSize == 0.0055 ? 0.001 : 0.012,
+            updateParticleSystem(size: currentParticleSize == 0.003 ? 0.05 : 0.092,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
             timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
