@@ -182,7 +182,7 @@ struct ImmersiveView: View {
             sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
         }
         .onReceive(timer_2) { _ in
-            updateParticleSystem(size: currentParticleSize >= 0.0055 ? currentParticleSize - 0.01 : currentParticleSize + 0.01,
+            updateParticleSystem(size: currentParticleSize >= 0.06 ? currentParticleSize - 0.02 : currentParticleSize + 0.02,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
             timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
