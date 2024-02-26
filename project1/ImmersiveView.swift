@@ -148,17 +148,26 @@ struct ImmersiveView: View {
             timerParticleModel.components.set(timerParticleViewModel.particleSystem)
             content.add(timerParticleModel)
 
-            particleEntityFireworks.transform.translation = SIMD3<Float>(x: -28, y: 0, z: -35)
+            particleEntityFireworks.transform.translation = SIMD3<Float>(x: -28, y: 15, z: -35)
             var particles2 = presets[1]
-            particles2.mainEmitter.size = 2
+            particles2.mainEmitter.size = 0.2
             particles2.mainEmitter.color = .evolving(start: .single(.yellow), end: .single(.orange))
+//            particles2.mainEmitter.isLightingEnabled = true
+            particles2.mainEmitter.sizeVariation = 0.001
+//            particles2.mainEmitter.vortexDirection = SIMD3<Float>(-100, 15, -25)
+            particles2.mainEmitter.attractionCenter = SIMD3<Float>(-2, -5, -3)
+            particles2.mainEmitter.vortexStrength = 10
+  
+
             particleEntityFireworks.components[ParticleEmitterComponent.self] = particles2
             content.add(particleEntityFireworks)
+//            particles2.burst()
             
             particleEntitySparks.transform.translation = SIMD3<Float>(x: -1.8, y: 15, z: -25)
             var particles = presets[2]
             particles.mainEmitter.size = 4
             particles.mainEmitter.angularSpeed = 0.1
+            particles.mainEmitter.birthRate = 0.0001
             particles.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
             particleEntitySparks.components[ParticleEmitterComponent.self] = particles
             content.add(particleEntitySparks)
@@ -169,6 +178,13 @@ struct ImmersiveView: View {
             particles3.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
             particleEntityMagic.components[ParticleEmitterComponent.self] = particles3
             content.add(particleEntityMagic)
+            
+            particleEntityRain.transform.translation = SIMD3<Float>(x: -20, y: 20, z: -15)
+            var particles4 = presets[3]
+            particles4.mainEmitter.size = 4
+            particles4.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
+            particleEntityRain.components[ParticleEmitterComponent.self] = particles4
+            content.add(particleEntityRain)
 
             
         }
