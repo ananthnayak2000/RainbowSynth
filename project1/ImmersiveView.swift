@@ -189,7 +189,7 @@ struct ImmersiveView: View {
             
         }
         .onAppear {
-//            playSound()
+            playSound()
             originalParticleViewModel.initSequence(randomSeed: Float.random(in: 0.7...2))
             let times_1 = [1.698, 1.698, 1.698] // Example time intervals for bursts
             sequenceParticleViewModel.startSequence(times: times_1)
