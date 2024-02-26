@@ -114,7 +114,7 @@ struct ImmersiveView: View {
     private var sequenceParticleModel = ModelEntity()
     private var timerParticleModel = ModelEntity()
     
-    @State var particleEntityPreset = Entity()
+    @State var particleEntitySparks = Entity()
     let presets: [ParticleEmitterComponent] = [
         .Presets.fireworks,
         .Presets.impact,
@@ -123,9 +123,6 @@ struct ImmersiveView: View {
         .Presets.rain,
         .Presets.snow
     ]
-
-
-
 
     // timer to drive sequenceParticleModel
     // This could be cool if we know the tempo of the music then this can emit in time with the music
@@ -141,19 +138,20 @@ struct ImmersiveView: View {
             sequenceParticleModel.transform.translation = SIMD3<Float>(x: -2, y: 0.7, z: -15)
             sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
             content.add(sequenceParticleModel)
-            timerParticleModel.transform.translation = SIMD3<Float>(x: 0, y: 1.7, z: 10)
+            timerParticleModel.transform.translation = SIMD3<Float>(x: 0, y: 1.7, z: -10)
             timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
             content.add(timerParticleModel)
 
         
   
-            particleEntityPreset.transform.translation = SIMD3<Float>(x: -1.8, y: 5, z: -30)
+            particleEntitySparks.transform.translation = SIMD3<Float>(x: -1.8, y: 15, z: -25)
             let index = 2//Array(0...5).randomElement()!
             var particles = presets[index]
             particles.mainEmitter.size = 4
+            particles.mainEmitter.angularSpeed = 0.1
             particles.mainEmitter.color = .evolving(start: .single(.orange), end: .single(.blue))
-            particleEntityPreset.components[ParticleEmitterComponent.self] = particles
-            content.add(particleEntityPreset)
+            particleEntitySparks.components[ParticleEmitterComponent.self] = particles
+            content.add(particleEntitySparks)
         }
         .onAppear {
             playSound()
@@ -178,13 +176,13 @@ struct ImmersiveView: View {
             }
         }
         .onReceive(timer_1) { _ in
-            updateParticleSystem(size: currentParticleSize == 0.0055 ? 0.001 : 0.012,
+            updateParticleSystem(size: currentParticleSize >= 0.0055 ? currentParticleSize - 0.01 : currentParticleSize + 0.01,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
             sequenceParticleModel.components.set(sequenceViewModel_1.particleSystem)
         }
         .onReceive(timer_2) { _ in
-            updateParticleSystem(size: currentParticleSize == 0.003 ? 0.05 : 0.092,
+            updateParticleSystem(size: currentParticleSize >= 0.0055 ? currentParticleSize - 0.01 : currentParticleSize + 0.01,
                                  lifeSpan: currentParticleLifeSpan == 1.0 ? 10.0 : 1.0,
                                  speed: currentParticleSpeed == 0.01 ? 1.0 : 0.01)
             timerParticleModel.components.set(sequenceViewModel_2.particleSystem)
