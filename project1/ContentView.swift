@@ -17,6 +17,7 @@ struct ContentView: View {
     
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
     @Environment(\.dismissImmersiveSpace) var dismissImmersiveSpace
+    @Environment(\.scenePhase) private var scenePhase
 
     var body: some View {
         VStack {
@@ -52,6 +53,13 @@ struct ContentView: View {
                     immersiveSpaceIsShown = false
                     immersiveEffect = nil
                 }
+            }
+        }
+        // Fixes issue with quiting app while in immersive mode. Have not figured out how to solve deprecated issues.
+        .onChange(of: scenePhase) { newScenePhase in
+            if newScenePhase == .inactive || newScenePhase == .background {
+                showImmersiveSpace = false
+                immersiveEffect = nil
             }
         }
     }
